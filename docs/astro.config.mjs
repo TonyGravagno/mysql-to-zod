@@ -27,6 +27,7 @@ export default defineConfig({
           items: [
             { label: "Introduction", link: "/" },
             { label: "PNPM", link: "/getting-started/pnpm" },
+            { label: "Docs", link: "/getting-started/docs" },
           ],
         },
         {
