@@ -28,6 +28,7 @@ export default defineConfig({
             { label: "Introduction", link: "/" },
             { label: "PNPM", link: "/getting-started/pnpm" },
             { label: "Docs", link: "/getting-started/docs" },
+            { label: "Generate Schema", link: "/getting-started/generate-schema" },
           ],
         },
         {
