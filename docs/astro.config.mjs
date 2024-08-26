@@ -26,6 +26,7 @@ export default defineConfig({
           label: "Start Here",
           items: [
             { label: "Introduction", link: "/" },
+            { label: "PNPM", link: "/getting-started/pnpm" },
           ],
         },
         {
