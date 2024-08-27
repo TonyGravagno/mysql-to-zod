@@ -24,7 +24,13 @@ export default defineConfig({
       sidebar: [
         {
           label: "Start Here",
-          items: [{ label: "Getting Started", link: "/" }],
+          items: [
+            { label: "Introduction", link: "/" },
+            { label: "PNPM", link: "/getting-started/pnpm" },
+            { label: "Docs", link: "/getting-started/docs" },
+            { label: "Generate Schema", link: "/getting-started/generate-schema" },
+            { label: "Improvements", link: "/getting-started/improvements" }
+          ],
         },
         {
           label: "Options",

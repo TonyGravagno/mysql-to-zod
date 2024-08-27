@@ -1,0 +1,62 @@
+---
+title: "PNPM Package Manager"
+author: "tonygravagno"
+---
+
+## What is it?
+
+This project uses [PNPM](https://github.com/pnpm/pnpm) for package management. PNPM is exactly like NPM, just optimized.
+
+You do not need PNPM to use this project - you can use `npm`. But if this is your first introduction to PNPM, it's very simple but very efficient, and this would be a great project to get started using it.
+
+PNPM stores all packages in a common location, rather than directly in the 'node_modules' folder of every project.
+
+When you install a package it checks the common location for that package+version. If it doesn't exist, it's loaded to the common location. When it exists, a link is set from 'node_modules' to the common location. Software at the exact same version isn't copied to multiple projects.
+
+### General Information
+
+#### Install PNPM
+
+- `npm install -g pnpm`
+- Then use `pnpm` rather than `npm` for all operations or wherever you choose.
+
+#### Configuration notes
+
+Minor configuration of PNPM is required. You can run `pnpm setup` and allow that process to automatically set its parameters and your PATH to point to required folders. Or you can customize the setup with these notes. Close your IDE before making environment changes.
+
+The `pnpm` command is installed in the folder with `npm`, `npx`, and other related commands. It's configuration includes setting parameters "global-bin-dir" and "store-dir".
+
+**global-bin-dir** is the location where pnpm saves its own commands. It's similar to the folder where NPM saves its commands. In fact, this folder can be under that folder. For example:
+
+- C:\Users\you\AppData\Roaming\npm
+- C:\Users\you\AppData\Roaming\npm\global-bin-dir
+
+You can set this folder manually. Create a folder and then execute this command:
+
+`pnpm config set global-bin-dir "C:\Users\you\AppData\Roaming\npm\global-bin-dir"`
+
+Also, add that folder to your user PATH.
+
+**store-dir** is the location where all of the common node_modules packages are stored.
+
+You can set this folder manually. Create a folder and then execute this command:
+
+`pnpm config set store-dir "D:\path\.pnpm-store"`
+
+(A 'v3' folder tree is created under that folder.)
+
+Also, add that folder to your user PATH.
+
+#### Existing projects
+
+In an existing project, just delete the 'node_modules' folder and `pnpm install`. This uses the existing package.json and lock file to install packages to the new location, and link from the local 'node_modules' folder.
+
+Once pnpm is installed, `pnpm install` to load 'node_modules' with all dependencies.
+
+### Specific to this project
+
+- Install PNPM as noted above or use NPM for package management.
+- Open a terminal in this project's root folder and `pnpm install`.
+- `cd` to /docs and `pnpm install`.
+
+You should now be ready to view docs and use this project.
