@@ -1,0 +1,37 @@
+---
+title: "Generate Schema"
+author: "tonygravagno"
+---
+
+## Configuration File
+
+Use file mysqlToZod.config.js to define the data source and format of the schema output.
+
+Copy the original mysqlToZod.config.js to a backup.
+
+Walk through the documentation [Options](/options/config) pages to configure the .config.js file for your database and output requirements.
+
+## Run to generate
+
+Run the project using the script in package.json.
+
+Unless there are errors you should see a new schema file in the outputDir and fileName(s) specified in the config file.
+
+## Verify, Modify, Repeat
+
+Check the schema .ts files to ensure they contain the data desired, and in the desired format.
+
+- Are all required tables included?
+- Did you want table and field comments in the schema?
+- Is the usage of "nullish" and "nullable" acceptable?
+- Are the names for schema constants and types correct?
+- Is casing correct for your application?
+- Are more replacement settings required to modify table/schema names or field names?
+
+If required, change the config file and re-run the generation process.
+
+You may find that the schema in the database is missing comments, or that the database schema itself needs small changes to type or constraint details. This is one of the benefits of this exercise. If required, alter the database and re-run the generation process.
+
+## Reproducibility
+
+When the generation process is complete and you have usable code, save the mysqlToZod.config.js file and document it (however you wish) to ensure that the exact same process can be repeated. It's typical to get in to code and need to come back later to add tables, update the schema based on database changes, or to mass-change details for all schema for a specific application.

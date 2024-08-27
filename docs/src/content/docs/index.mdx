@@ -7,15 +7,15 @@ author: "araera111"
 
 mysql-to-zod is a tool that generates Zod type definitions from MySQL table definitions.
 
-### Usage
+## Usage
 
 ```bash
 npx mysql-to-zod mysql://user:password@localhost:3306/dbname
 ```
 
-The above command will generate a type definition of zod in `. /mysqlToZod/schema.ts` will generate a type definition for zod.
+The above command will generate Zod-specific type definitions of all tables in "dbname", saving the new TypeScript code in `./mysqlToZod/schema.ts`.
 
-### Example
+## Example
 
 Suppose DB: my_todo has the following table definitions.
 
@@ -30,7 +30,7 @@ CREATE TABLE todo (
 );
 ```
 
-From the above table definition, the following zod schema is generated.
+From the above table definition, the following Zod schema is generated.
 
 ```typescript
 import { z } from "zod";
@@ -45,13 +45,10 @@ export const todoSchema = z.object({
 export type Todo = z.infer<typeof todoSchema>;
 ```
 
-These are the basic instructions for use.
-In many cases the above is all that is needed, but there are options that can be customized.
-For example, if you want the variable name to be `TODO_SCHEMA` instead of `todoSchema`.
+## Summary
 
-For more detailed options, please see the next page.
+These are the basic instructions for use. In many cases the above is all that is needed.  
+But with extensive [options](/options/config) many details can be customized.
+For example, you may want the variable name to be `TODO_SCHEMA` instead of `todoSchema`.
 
-## Notice
-
-If you have any questions about usage or suggestions for improvement, please visit disucussions.
-[Disucussions](https://github.com/araera111/mysql-to-zod/discussions)
+Please visit [Discussions](https://github.com/araera111/mysql-to-zod/discussions) for all questions about usage, and suggestions for improvement.
