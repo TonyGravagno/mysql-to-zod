@@ -1,0 +1,30 @@
+---
+title: "Documentation"
+author: "tonygravagno"
+---
+
+## The docs folder
+
+The project includes a sub-project in the 'docs' folder. It contains the documentation that you are reading now.
+
+Using this in-project documentation is completely optional. You may prefer to use the [online version](https://mysql-to-zod.pages.dev/).
+
+**If you choose to use this in-project documentation ...**
+
+This is built and run separately from the mysql-to-zod project.
+
+The documentation project is based on [Astro](https://astro.build/), which uses local .mdx files (slightly enhanced Markdown) to generate a local website that hosts the documentation.
+
+## Setup
+
+After you [install PNPM](/getting-started/pnpm), open a terminal to the 'docs' folder, and `pnpm install` to load node_modules with all dependencies, including Astro. (Or use the familiar `npm` if you prefer.)
+
+## Generate deployable docs
+
+Build the docs project using the script in package.json.
+
+## View the docs in the browser
+
+Run the docs project using the "dev" or "start" script in package.json. In this mode the doc pages refresh as files are saved in the project.
+
+Open a browser and connect to the URL provided in the console. You can use the information there to guide you through setting the configuration file and generating your schema.
