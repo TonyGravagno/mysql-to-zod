@@ -4,25 +4,36 @@
 
 ![default](https://github.com/araera111/mysql-to-zod/assets/63596736/650265b4-414c-49f3-b88c-cf437921960c)
 
-## Notice
+## Project
 
-If you have any questions about usage or suggestions for improvement, please visit disucussions.
-<https://github.com/araera111/mysql-to-zod/discussions>
+Ideas, Q&A, and notes about your projects are welcome in [GitHub Discussions](https://github.com/araera111/mysql-to-zod/discussions).
+
+Please submit enhancement requests and bug reports to the [GitHub repo](https://github.com/araera111/mysql-to-zod/issues).
+
+This [online documentation](https://mysql-to-zod.pages.dev/) is included in the project for local browsing and changes.  
+Docs include information about dependencies, getting started, detailed configuration options, and tips for using this software effectively.
 
 ## Overview
 
-Connect to MySQL using mysql2 and retrieve the CREATE TABLE statement.
-It is then parsed by node-sql-parser and output as zodSchema.
+This is how this utility works:
 
-## Usage
+1. Connect to MySQL.
+1. Retrieve the CREATE TABLE statement.
+1. Parse that text with node-sql-parser.
+1. Output a .ts file with Zod schema.
+
+**CLI Example**
+
 
 ```bash
 npx mysql-to-zod mysql://user:pass@localhost:3306/dbname
 ```
 
+Now copy your new .ts files into your TypeScript application project.
+
 ## Demo
 
-For the following SQL schema
+This SQL query was used to generate the MySQL table in the following screenshot.
 
 ```sql
 CREATE TABLE todo (
@@ -35,17 +46,15 @@ CREATE TABLE todo (
 );
 ```
 
-## example
-
 ![image](https://github.com/araera111/mysql-to-zod/assets/63596736/c6d4bf03-8109-4ccd-804f-59249a733696)
 
-run:
+### Run from CLI or with this project open in your IDE
 
 ```bash
-npx mysql-to-zod@latest mysql://user@pass:3306/dbname
+npx mysql-to-zod@latest mysql://user@pass:3306/test
 ```
 
-## output
+### Output
 
 ```typescript
 import { z } from "zod";
@@ -60,15 +69,14 @@ export const TodoSchema = z.object({
 export type Todo = z.infer<typeof TodoSchema>;
 ```
 
-## options
+## Config File Options
 
-WIP...
+The file mysqlToZod.config.js plays a significant role in each run.  
+With a complete config file, details like the above connection string are not required in the CLI.  
+For each project, create and configure a new config file.  
+All options are detailed in the [online documentation](https://mysql-to-zod.pages.dev/).
 
-rootdir
-
-```sh
-touch mysqlToZod.config.js
-```
+## Config File Examples
 
 ![image](https://github.com/araera111/mysql-to-zod/assets/63596736/d3cdc363-1d1f-422f-9ee6-c2ad2c7136d0)
 
