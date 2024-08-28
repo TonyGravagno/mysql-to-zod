@@ -61,7 +61,7 @@ import { z } from "zod";
 
 export const TodoSchema = z.object({
   id: z.number(),
-  title: z.string(),
+  title: z.string().max(255),
   description: z.string().nullable(),
   created_at: z.date().nullable(),
   updated_at: z.date().nullable(),

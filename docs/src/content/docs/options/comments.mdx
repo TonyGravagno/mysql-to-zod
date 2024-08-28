@@ -49,7 +49,7 @@ When active is true, the following comments are output.
 export const todoListSchema = z.object({
   // id : It will always be unique.
   id: z.number(),
-  task: z.string(),
+  task: z.string().max(255),
   description: z.string().nullish(),
   due_date: z.date().nullish(),
   created_at: z.date().nullish(),
@@ -93,7 +93,7 @@ With the above settings, the following output is obtained.
 export const todoListSchema = z.object({
   /* It will always be unique. */
   id: z.number(),
-  task: z.string(),
+  task: z.string().max(255),
   description: z.string().nullish(),
   due_date: z.date().nullish(),
   created_at: z.date().nullish(),
