@@ -51,7 +51,7 @@ export const myTodoListSchema = z.object({
     z.literal("in_progress"),
     z.literal("done"),
   ]), // changed manually
-  task: z.string(),
+  task: z.string().max(255),
   description: z.string().nullish(),
   due_date: z.date().nullish(),
   created_at: z.date().nullish(),
@@ -74,7 +74,7 @@ export const myTodoListSchema = z.object({
     z.literal("in_progress"),
     z.literal("done"),
   ]),
-  task: z.string(),
+  task: z.string().max(255),
   description: z.string().nullish(),
   due_date: z.date().nullish(),
   created_at: z.date().nullish(),

@@ -42,7 +42,7 @@ CREATE TABLE `my_todo_list` (
 ```ts
 export const myTodoListSchema = z.object({
   id: z.number(),
-  task: z.string(),
+  task: z.string().max(255),
   description: z.string().nullish(),
   due_date: z.date().nullish(),
   created_at: z.date().nullish(),
@@ -92,7 +92,7 @@ import { globalSchema } from "./globalSchema";
 
 export const myTodoListSchema = z.object({
   id: globalSchema.mysqlINT,
-  task: globalSchema.mysqlVARCHAR,
+  task: globalSchema.mysqlVARCHAR.max(255),
   description: globalSchema.mysqlTEXT.nullish(),
   due_date: globalSchema.mysqlDATE.nullish(),
   created_at: globalSchema.mysqlTIMESTAMP.nullish(),
@@ -126,7 +126,7 @@ If [["DATE", "z.string()"]] is specified for implementation, what would be z.dat
 ```ts
 export const myTodoListSchema = z.object({
   id: z.number(),
-  task: z.string(),
+  task: z.string().max(255),
   description: z.string().nullish(),
   due_date: z.string().nullish(), // z.date() is converted to z.string()
   created_at: z.date().nullish(),
@@ -141,7 +141,7 @@ If [["DATE", "superMyDate"]] is specified in references, the output will be as f
 ```ts
 export const myTodoListSchema = z.object({
   id: globalSchema.mysqlINT,
-  task: globalSchema.mysqlVARCHAR,
+  task: globalSchema.mysqlVARCHAR.max(255),
   description: globalSchema.mysqlTEXT.nullish(),
   due_date: globalSchema.superMyDateSchema.nullish(), // convert to globalSchema.superMyDateSchema
   created_at: globalSchema.mysqlTIMESTAMP.nullish(),
