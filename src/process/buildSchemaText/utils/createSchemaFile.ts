@@ -14,6 +14,7 @@ export const convertToColumn = (ast: any) => {
 
 	const nullable = ast?.nullable?.type !== "not null";
 	const comment = ast?.comment?.value?.value;
+	const length = ast?.definition?.length || -1; // flag : no max length
 	const auto_increment = G.isNullable(ast.auto_increment) ? false : true;
 	return objectToCamel({
 		column,
@@ -21,6 +22,7 @@ export const convertToColumn = (ast: any) => {
 		nullable,
 		comment,
 		auto_increment,
+		length
 	});
 };
 
