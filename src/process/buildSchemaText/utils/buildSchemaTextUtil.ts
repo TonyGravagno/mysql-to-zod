@@ -320,6 +320,16 @@ export const composeColumnStringList = ({
 	const { comment, nullable, type, autoIncrement } = column;
 	const { comments } = option;
 
+	const zodType = convertToZodType({
+		type,
+		option,
+	})
+	const maybeNullable = addNullType({ nullable, option, mode, autoIncrement })
+    // add other schema details here
+
+	// assemble final schema string
+	const zodSchema = zodType + maybeNullable;
+
 	const result: string[] = [
 		getCommentString({
 			comment,
@@ -327,10 +337,7 @@ export const composeColumnStringList = ({
 			column,
 			option,
 		}),
-		`${addSingleQuotation(column.column)}: ${convertToZodType({
-			type,
-			option,
-		})}${addNullType({ nullable, option, mode, autoIncrement })},\n`,
+		`${addSingleQuotation(column.column)}: ${zodSchema},\n`,
 	].flatMap((x) => (G.isNullable(x) ? [] : [x]));
 
 	return result;
