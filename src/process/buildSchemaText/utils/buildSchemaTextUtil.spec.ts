@@ -347,6 +347,47 @@ describe("composeColumnStringList", () => {
 			composeColumnStringList({ column, option, mode: "select" }),
 		).toStrictEqual(result);
 	});
+	
+	it("case3", () => {
+		const column: Column = {
+			type: "VARCHAR",
+			column: "last_name",
+			nullable: false,
+			autoIncrement: false,
+			length: 60,
+		};
+		const option: MysqlToZodOption = {
+			...basicMySQLToZodOption,
+		};
+		const result =
+			"last_name: z.string().max(60),";
+		expect(
+			composeColumnStringList({ column, option, mode: "select" }),
+		).toBe(result);
+	});
+	
+	// DATE and TIMESTAMP do not use length
+	it("case4", () => {
+		const column: Column = {
+			type: "DATE",
+			column: "birth_date",
+			nullable: true,
+			autoIncrement: false,
+			length: 4, // valid in MySQL, not in Zod
+		};
+		const option: MysqlToZodOption = {
+			...basicMySQLToZodOption,
+			schema: {
+				...basicMySQLToZodOption.schema!,
+				nullType: "nullish"
+			}
+		};
+		const result =
+			"birth_date: z.date().nullish(),";
+		expect(
+			composeColumnStringList({ column, option, mode: "select" }),
+		).toBe(result);
+	});
 });
 
 describe("replaceTableName", () => {
