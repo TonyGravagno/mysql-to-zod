@@ -12,6 +12,7 @@
     "mysql-to-zod": "tsx ./src/main.ts",
     "dev": "tsx ./src/main.ts",
     "build": "zx ./build.mjs && zx ./addShebang.mjs",
+    "debugBuild": "esbuild ./src/main.ts --bundle --sourcemap --platform=node --outfile=./dist/main.js",
     "test": "vitest",
     "type": "tsc --noEmit",
     "lint": "pnpm biome check --apply ./src",
