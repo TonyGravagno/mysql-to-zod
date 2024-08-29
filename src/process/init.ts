@@ -1,9 +1,12 @@
 import { A, D, G, O, R, pipe } from "@mobily/ts-belt";
-import { Result } from "@mobily/ts-belt/dist/types/Result";
-import { Command } from "commander";
+import type { Result } from "@mobily/ts-belt/dist/types/Result";
+import type { Command } from "commander";
 import { cosmiconfig } from "cosmiconfig";
-import { DbConnectionOption } from "../options/dbConnection";
-import { MysqlToZodOption, basicMySQLToZodOption } from "../options/options";
+import type { DbConnectionOption } from "../options/dbConnection";
+import {
+	type MysqlToZodOption,
+	basicMySQLToZodOption,
+} from "../options/options";
 export const configLoad = async (): Promise<
 	Result<MysqlToZodOption, string>
 > => {

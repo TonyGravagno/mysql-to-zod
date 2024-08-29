@@ -1,9 +1,9 @@
+import { join } from "node:path";
 import { R, pipe } from "@mobily/ts-belt";
 import { readFileSync } from "fs-extra";
-import { join } from "path";
 import { match } from "ts-pattern";
-import { MysqlToZodOption } from "../../../options";
-import { SchemaInformation } from "../types/syncType";
+import type { MysqlToZodOption } from "../../../options";
+import type { SchemaInformation } from "../types/syncType";
 import { parse } from "./zodParse";
 
 export const getSchemaInformation = (text: string): SchemaInformation[] => {

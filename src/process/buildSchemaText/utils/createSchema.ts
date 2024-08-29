@@ -1,15 +1,15 @@
 import { G, pipe } from "@mobily/ts-belt";
-import { SchemaInformation } from "../../../features/sync/types/syncType";
+import type { SchemaInformation } from "../../../features/sync/types/syncType";
 import { schemaInformationToText } from "../../../features/sync/utils/syncUtil";
 import { parse } from "../../../features/sync/utils/zodParse";
-import { MysqlToZodOption } from "../../../options/options";
+import type { MysqlToZodOption } from "../../../options/options";
 import { schemaOptionSchema } from "../../../options/schema";
 import { separateOptionSchema } from "../../../options/separate";
 import { typeOptionSchema } from "../../../options/type";
 import { formatByPrettier } from "../../formatByPrettier";
-import { Column, SchemaResult } from "../types/buildSchemaTextType";
+import type { Column, SchemaResult } from "../types/buildSchemaTextType";
 import {
-	CreateSchemaModeUnion,
+	type CreateSchemaModeUnion,
 	combineSchemaNameAndSchemaString,
 	composeColumnStringList,
 	composeSchemaName,
@@ -123,7 +123,7 @@ export const createSchema = ({
 						G.isNotNullable(x) ? [x] : [],
 					),
 				},
-		  });
+			});
 
 	const typeOption = typeOptionSchema.parse(options.type);
 
@@ -155,7 +155,7 @@ export const createSchema = ({
 						schemaInformationList,
 						mode: "insert",
 					}).schema
-			  }`
+				}`
 			: "";
 
 	return {
