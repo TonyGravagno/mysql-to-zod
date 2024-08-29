@@ -14,7 +14,6 @@ export const configLoad = async (
 	const explorer = cosmiconfig("mysqlToZod", {
 		searchPlaces: [commandOption.file],
 	});
-
 	const cfg = await explorer.search();
 
 	return G.isNotNullable(cfg)
@@ -59,7 +58,6 @@ export const init = async (
 	program: Command,
 ): Promise<Result<MysqlToZodOption, string>> => {
 	const commandOption = commandOptionSchema.parse(program.opts());
-
 	const config = await configLoad(commandOption);
 	const argsDBConnection = A.get(program.args, 0);
 	const dbConnection = getDBConnection({
