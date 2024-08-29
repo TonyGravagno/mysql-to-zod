@@ -53,7 +53,7 @@ const getDBConnection = ({
 const commandOptionSchema = z.object({
 	file: z.string(),
 });
-type CommandOption = z.infer<typeof commandOptionSchema>;
+export type CommandOption = z.infer<typeof commandOptionSchema>;
 export const init = async (
 	program: Command,
 ): Promise<Result<MysqlToZodOption, string>> => {
