@@ -6,6 +6,11 @@ export const separateOptionSchema = z
 		insertPrefix: z.string().optional().default("insert"),
 		insertSuffix: z.string().optional().default(""),
 	})
-	.partial();
+	.partial()
+	.default({
+		isSeparate: false,
+		insertPrefix: "insert",
+		insertSuffix: "",
+	});
 
 export type separateOption = z.infer<typeof separateOptionSchema>;

@@ -1,11 +1,8 @@
 import { R } from "@mobily/ts-belt";
-import { type CommandOption, configLoad } from "./init";
+import { configLoad } from "./init";
 describe("configLoad", () => {
 	it("case1 default path", async () => {
-		const commandOption: CommandOption = {
-			file: "./mysqlToZod.config.js",
-		};
-		const actual = await configLoad(commandOption);
+		const actual = await configLoad("./mysqlToZod.config.js");
 		expect(actual).toStrictEqual(
 			R.Ok({
 				output: {
@@ -58,18 +55,12 @@ describe("configLoad", () => {
 	});
 
 	it("case2 file not found", async () => {
-		const commandOption: CommandOption = {
-			file: "./notFound.config.js",
-		};
-		const actual = await configLoad(commandOption);
+		const actual = await configLoad("./notFound.config.js");
 		expect(actual).toStrictEqual(R.Error("config file is not Found"));
 	});
 
 	it("case3 test/config/testConfig.js", async () => {
-		const commandOption: CommandOption = {
-			file: "./test/config/testConfig.js",
-		};
-		const actual = await configLoad(commandOption);
+		const actual = await configLoad("./test/config/testConfig.js");
 		expect(actual).toStrictEqual(
 			R.Ok({
 				output: {
