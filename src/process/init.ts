@@ -1,17 +1,21 @@
 import { A, D, G, O, R, pipe } from "@mobily/ts-belt";
-import { Result } from "@mobily/ts-belt/dist/types/Result";
-import { Command } from "commander";
+import type { Result } from "@mobily/ts-belt/dist/types/Result";
+import type { Command } from "commander";
 import { cosmiconfig } from "cosmiconfig";
-import { DbConnectionOption } from "../options/dbConnection";
-import { MysqlToZodOption, basicMySQLToZodOption } from "../options/options";
-export const configLoad = async (): Promise<
-	Result<MysqlToZodOption, string>
-> => {
+import { z } from "zod";
+import type { DbConnectionOption } from "../options/dbConnection";
+import {
+	type MysqlToZodOption,
+	basicMySQLToZodOption,
+} from "../options/options";
+export const configLoad = async (
+	commandOption: CommandOption,
+): Promise<Result<MysqlToZodOption, string>> => {
 	const explorer = cosmiconfig("mysqlToZod", {
-		searchPlaces: ["mysqlToZod.config.js"],
+		searchPlaces: [commandOption.file],
 	});
-
 	const cfg = await explorer.search();
+
 	return G.isNotNullable(cfg)
 		? R.Ok(cfg.config)
 		: R.Error("config file is not Found");
@@ -46,10 +50,15 @@ const getDBConnection = ({
 	);
 };
 
+const commandOptionSchema = z.object({
+	file: z.string(),
+});
+export type CommandOption = z.infer<typeof commandOptionSchema>;
 export const init = async (
 	program: Command,
 ): Promise<Result<MysqlToZodOption, string>> => {
-	const config = await configLoad();
+	const commandOption = commandOptionSchema.parse(program.opts());
+	const config = await configLoad(commandOption);
 	const argsDBConnection = A.get(program.args, 0);
 	const dbConnection = getDBConnection({
 		dbConnection: argsDBConnection,

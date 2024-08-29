@@ -1,19 +1,22 @@
 import { A, G, O, pipe } from "@mobily/ts-belt";
-import { Create } from "node-sql-parser";
+import type { Create } from "node-sql-parser";
 import { toCamel, toPascal, toSnake } from "ts-case-convert";
 import { match } from "ts-pattern";
 import {
-	OptionTableComments,
+	type OptionTableComments,
 	defaultColumnCommentFormat,
 	defaultTableCommentFormat,
 	optionTableCommentsSchema,
 } from "../../../options/comments";
-import { CaseUnion } from "../../../options/common";
-import { MysqlToZodOption } from "../../../options/options";
-import { SchemaOption } from "../../../options/schema";
-import { separateOption } from "../../../options/separate";
-import { TypeOption } from "../../../options/type";
-import { Column, commentKeywordSchema } from "../types/buildSchemaTextType";
+import type { CaseUnion } from "../../../options/common";
+import type { MysqlToZodOption } from "../../../options/options";
+import type { SchemaOption } from "../../../options/schema";
+import type { separateOption } from "../../../options/separate";
+import type { TypeOption } from "../../../options/type";
+import {
+	type Column,
+	commentKeywordSchema,
+} from "../types/buildSchemaTextType";
 export const isMaybeRegExp = (str: string): boolean =>
 	str.startsWith("/") && str.endsWith("/");
 
@@ -296,15 +299,13 @@ const addNullType = ({
 	mode,
 	option,
 }: AddNullTypeProps) => {
-	{
-		if (mode === "select") {
-			return nullable ? `.${option.schema?.nullType ?? "nullable"}()` : "";
-		}
-		/* In insert mode, auto_increment is also nullable. */
-		return nullable || autoIncrement
-			? `.${option.schema?.nullType ?? "nullable"}()`
-			: "";
+	if (mode === "select") {
+		return nullable ? `.${option.schema?.nullType ?? "nullable"}()` : "";
 	}
+	/* In insert mode, auto_increment is also nullable. */
+	return nullable || autoIncrement
+		? `.${option.schema?.nullType ?? "nullable"}()`
+		: "";
 };
 
 type ComposeColumnStringListProps = {
@@ -320,6 +321,16 @@ export const composeColumnStringList = ({
 	const { comment, nullable, type, autoIncrement } = column;
 	const { comments } = option;
 
+	const zodType = convertToZodType({
+		type,
+		option,
+	});
+	const maybeNullable = addNullType({ nullable, option, mode, autoIncrement });
+	// add other schema details here
+
+	// assemble final schema string
+	const zodSchema = zodType + maybeNullable;
+
 	const result: string[] = [
 		getCommentString({
 			comment,
@@ -327,10 +338,7 @@ export const composeColumnStringList = ({
 			column,
 			option,
 		}),
-		`${addSingleQuotation(column.column)}: ${convertToZodType({
-			type,
-			option,
-		})}${addNullType({ nullable, option, mode, autoIncrement })},\n`,
+		`${addSingleQuotation(column.column)}: ${zodSchema},\n`,
 	].flatMap((x) => (G.isNullable(x) ? [] : [x]));
 
 	return result;

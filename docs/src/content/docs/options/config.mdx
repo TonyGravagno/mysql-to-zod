@@ -5,8 +5,13 @@ author: "araera111"
 
 ## Configuration file location
 
-Place the configuration file in the directory where you want to run it.
-If you want to run it in `/home/user/develop/project001`, place `/home/user/develop/project001/mysqlToZod.config.js`.
+When running `mysql-to-zod`, you can specify the location of the configuration file.
+
+```bash
+npx mysql-to-zod mysql://user:password@localhost:3306/dbname -f ./mysqlToZod.config.js
+```
+
+If you do not specify a configuration file, the tool will look for a mysqlToZod.config.js file in the current directory where the command is executed.
 
 ## How to write a configuration file
 

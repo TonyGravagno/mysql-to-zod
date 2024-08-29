@@ -1,17 +1,17 @@
 import { produce } from "immer";
-import { AST } from "node-sql-parser";
-import { OptionTableComments } from "../../../options/comments";
+import type { AST } from "node-sql-parser";
+import type { OptionTableComments } from "../../../options/comments";
 import {
-	MysqlToZodOption,
+	type MysqlToZodOption,
 	basicMySQLToZodOption,
 } from "../../../options/options";
-import {
+import type {
 	SchemaOption,
 	SchemaZodImplementation,
 	SchemaZodReferences,
 } from "../../../options/schema";
-import { separateOption } from "../../../options/separate";
-import { Column } from "../types/buildSchemaTextType";
+import type { separateOption } from "../../../options/separate";
+import type { Column } from "../types/buildSchemaTextType";
 import {
 	combineSchemaNameAndSchemaString,
 	composeColumnStringList,

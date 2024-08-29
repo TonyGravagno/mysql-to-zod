@@ -1,5 +1,5 @@
-import { MysqlToZodOption } from "../../../options";
-import { Column } from "../types/buildSchemaTextType";
+import type { MysqlToZodOption } from "../../../options";
+import type { Column } from "../types/buildSchemaTextType";
 import { createSchema } from "./createSchema";
 
 describe("createSchema", () => {

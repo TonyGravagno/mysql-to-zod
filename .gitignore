@@ -125,12 +125,14 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+
 # yarn v2
 .yarn/cache
 .yarn/unplugged
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+settings.json
 
 ### Node Patch ###
 # Serverless Webpack directories
@@ -145,7 +147,6 @@ dist
 old
 mysqlToZod
 .yarn
-.vscode
 npm
 updateBiome.mjs
 dist

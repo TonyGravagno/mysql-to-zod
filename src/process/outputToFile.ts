@@ -1,7 +1,7 @@
+import { join } from "node:path";
 import { G, O, pipe } from "@mobily/ts-belt";
 import { mkdirpSync, writeFileSync } from "fs-extra";
-import { join } from "path";
-import { OptionOutput } from "../options/output";
+import type { OptionOutput } from "../options/output";
 import { formatByPrettier } from "./formatByPrettier";
 
 type OutputParams = {

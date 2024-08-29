@@ -1,5 +1,8 @@
 import { produce } from "immer";
-import { MysqlToZodOption, basicMySQLToZodOption } from "../../options/options";
+import {
+	type MysqlToZodOption,
+	basicMySQLToZodOption,
+} from "../../options/options";
 import {
 	composeGlobalSchema,
 	composeGlobalSchemaRow,
@@ -59,7 +62,7 @@ mysqlDATE: z.date(),
 	it("case5 zod.implementation", () => {
 		const typeList = ["DATE"];
 		const option: MysqlToZodOption = produce(basicMySQLToZodOption, (draft) => {
-			if (draft.schema && draft.schema.zod) {
+			if (draft.schema?.zod) {
 				draft.schema.inline = false;
 				draft.schema.zod.implementation = [["DATE", "z.string()"]];
 			}
@@ -82,7 +85,7 @@ describe("composeGlobalSchemaRow", () => {
 	it("case 2", () => {
 		const type = "DATE";
 		const option: MysqlToZodOption = produce(basicMySQLToZodOption, (draft) => {
-			if (draft.schema && draft.schema.zod) {
+			if (draft.schema?.zod) {
 				draft.schema.zod.implementation = [["DATE", "z.string().datetime()"]];
 				draft.schema.zod.references = [["DATE", "ourDateTime"]];
 			}

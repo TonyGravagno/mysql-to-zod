@@ -1,5 +1,5 @@
 import { produce } from "immer";
-import { MysqlToZodOption } from "../../options/options";
+import type { MysqlToZodOption } from "../../options/options";
 import { convertToZodType } from "../buildSchemaText/utils/buildSchemaTextUtil";
 
 type ComposeGlobalSchemaRowParams = {
