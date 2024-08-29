@@ -29,6 +29,24 @@ type ComposeGlobalSchemaParams = {
 	typeList: readonly string[];
 	option: MysqlToZodOption;
 };
+
+const maxLengthFunction = `
+maxLength: (arg: any, limit: number, ctx?: RefinementCtx) : boolean => {
+  if (arg?.toString()?.length > limit) {
+    if (ctx)
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_big,
+        maximum: limit,
+        type: typeof arg === "number" ? "number" : "string",
+        inclusive: true,
+        message: \`Too many characters. Maximum \${limit}.\`
+     });
+    return false;
+  }
+  return true;
+},`;
+
+
 export const composeGlobalSchema = ({
 	typeList,
 	option,
@@ -39,9 +57,11 @@ export const composeGlobalSchema = ({
 		.join("");
 
 	const result = [
-		'import { z } from "zod";',
+		'import { z, RefinementCtx } from "zod";',
 		"export const globalSchema = {",
-		`${rows}};`,
+		`${rows}`,
+		`${maxLengthFunction}`,
+		`};`,
 	].join("\n");
 
 	return result;

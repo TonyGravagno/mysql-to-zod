@@ -318,7 +318,7 @@ export const composeColumnStringList = ({
 	option,
 	mode,
 }: ComposeColumnStringListProps): string[] => {
-	const { comment, nullable, type, autoIncrement } = column;
+	const { comment, nullable, type, autoIncrement, length } = column;
 	const { comments } = option;
 
 	const zodType = convertToZodType({
@@ -326,10 +326,18 @@ export const composeColumnStringList = ({
 		option,
 	});
 	const maybeNullable = addNullType({ nullable, option, mode, autoIncrement });
+
+	const isValidLength = (value: typeof length, datatype: string) => value &&
+	value > 0 &&
+	datatype != 'DATE' &&
+	datatype != 'TIMESTAMP';
+
+	const max = isValidLength(length, type) ? `.refine((arg) => globalSchema.maxLength(arg, ${length}), \`Too many characters. Maximum ${length}.\`)` : '';
+
 	// add other schema details here
 
 	// assemble final schema string
-	const zodSchema = zodType + maybeNullable;
+	const zodSchema = zodType + max + maybeNullable;
 
 	const result: string[] = [
 		getCommentString({
