@@ -32,6 +32,7 @@
   "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
+    "@testcontainers/mysql": "^10.12.0",
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^20.8.9",
     "esbuild": "^0.18.15",

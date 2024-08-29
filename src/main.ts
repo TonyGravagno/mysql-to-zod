@@ -12,7 +12,7 @@ import { throwError } from "./throwError";
 
 const program = new Command();
 
-const main = (command: Command) =>
+export const main = (command: Command) =>
 	pipe(
 		command,
 		init,
