@@ -17,6 +17,7 @@
     "type": "tsc --noEmit",
     "lint": "pnpm biome check --apply ./src",
     "fmt": "pnpm biome format --write ./src",
+    "check": "pnpm biome check --write ./src",
     "pub": "zx ./build.mjs && zx ./addShebang.mjs && npm publish",
     "knip": "knip"
   },
@@ -30,7 +31,7 @@
   "author": "yuumillar",
   "license": "MIT",
   "devDependencies": {
-    "@biomejs/biome": "^1.4.1",
+    "@biomejs/biome": "^1.8.3",
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^20.8.9",
     "esbuild": "^0.18.15",

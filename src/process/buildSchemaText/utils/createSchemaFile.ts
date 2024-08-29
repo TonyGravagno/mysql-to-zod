@@ -1,9 +1,9 @@
 import { G, R } from "@mobily/ts-belt";
-import { AST, Create, Parser } from "node-sql-parser";
+import { type AST, type Create, Parser } from "node-sql-parser";
 import { objectToCamel } from "ts-case-convert";
-import { SchemaInformation } from "../../../features/sync/types/syncType";
-import { MysqlToZodOption } from "../../../options/options";
-import { SchemaResult, columnsSchema } from "../types/buildSchemaTextType";
+import type { SchemaInformation } from "../../../features/sync/types/syncType";
+import type { MysqlToZodOption } from "../../../options/options";
+import { type SchemaResult, columnsSchema } from "../types/buildSchemaTextType";
 import { getTableComment } from "./buildSchemaTextUtil";
 import { createSchema } from "./createSchema";
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -14,7 +14,7 @@ export const convertToColumn = (ast: any) => {
 
 	const nullable = ast?.nullable?.type !== "not null";
 	const comment = ast?.comment?.value?.value;
-	const auto_increment = G.isNullable(ast.auto_increment) ? false : true;
+	const auto_increment = !G.isNullable(ast.auto_increment);
 	return objectToCamel({
 		column,
 		type,

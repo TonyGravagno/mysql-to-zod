@@ -1,6 +1,6 @@
 import { mergeSchemaTextWithOldInformation } from "../../../process/buildSchemaText/utils/createSchema";
 import { formatByPrettier } from "../../../process/formatByPrettier";
-import { SchemaInformation } from "../types/syncType";
+import type { SchemaInformation } from "../types/syncType";
 import { getSchemaInformation, schemaInformationToText } from "./syncUtil";
 
 describe("schemaInformationToText", () => {

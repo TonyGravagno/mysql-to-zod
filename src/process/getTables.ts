@@ -1,9 +1,9 @@
 import { A, AR, D, G, O, R, pipe } from "@mobily/ts-belt";
 import mysql from "mysql2/promise";
 import { z } from "zod";
-import { MysqlToZodOption } from "../options";
+import type { MysqlToZodOption } from "../options";
 import {
-	DbConnectionOption,
+	type DbConnectionOption,
 	dbConnectionOptionSchema,
 } from "../options/dbConnection";
 
