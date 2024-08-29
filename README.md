@@ -22,8 +22,7 @@ This is how this utility works:
 1. Parse that text with node-sql-parser.
 1. Output a .ts file with Zod schema.
 
-**CLI Example**
-
+### CLI Example
 
 ```bash
 npx mysql-to-zod mysql://user:pass@localhost:3306/dbname
