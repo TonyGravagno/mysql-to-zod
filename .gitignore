@@ -150,4 +150,4 @@ mysqlToZod
 npm
 updateBiome.mjs
 dist
-./test/testmainFunctionConfig.js
+testmainFunctionConfig.js
