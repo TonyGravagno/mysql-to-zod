@@ -323,9 +323,9 @@ export const composeColumnStringList = ({
 	const zodType = convertToZodType({
 		type,
 		option,
-	})
-	const maybeNullable = addNullType({ nullable, option, mode, autoIncrement })
-    // add other schema details here
+	});
+	const maybeNullable = addNullType({ nullable, option, mode, autoIncrement });
+	// add other schema details here
 
 	// assemble final schema string
 	const zodSchema = zodType + maybeNullable;
