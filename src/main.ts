@@ -56,6 +56,7 @@ const VERSION = process.env.VERSION || "0.0.0";
 
 program
 	.option("-u, --update", "update schema file")
+	.option("-f, --file [path]", "config file path", "./esd.config.json")
 	.name("mysql-to-zod")
 	/* NODE_ENV VERSION */
 	.version(VERSION || "0.0.0")
