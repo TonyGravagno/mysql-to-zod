@@ -9,10 +9,10 @@ import {
 	basicMySQLToZodOption,
 } from "../options/options";
 export const configLoad = async (
-	commandOption: CommandOption,
+	configFilePath: string,
 ): Promise<Result<MysqlToZodOption, string>> => {
 	const explorer = cosmiconfig("mysqlToZod", {
-		searchPlaces: [commandOption.file],
+		searchPlaces: [configFilePath],
 	});
 	const cfg = await explorer.search();
 
@@ -50,15 +50,15 @@ const getDBConnection = ({
 	);
 };
 
-const commandOptionSchema = z.object({
+export const commandOptionSchema = z.object({
 	file: z.string(),
 });
 export type CommandOption = z.infer<typeof commandOptionSchema>;
 export const init = async (
 	program: Command,
+	configFilePath: string,
 ): Promise<Result<MysqlToZodOption, string>> => {
-	const commandOption = commandOptionSchema.parse(program.opts());
-	const config = await configLoad(commandOption);
+	const config = await configLoad(configFilePath);
 	const argsDBConnection = A.get(program.args, 0);
 	const dbConnection = getDBConnection({
 		dbConnection: argsDBConnection,
