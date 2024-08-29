@@ -41,9 +41,6 @@ describe("configLoad", () => {
 						references: [],
 					},
 				},
-				sync: {
-					active: true,
-				},
 				separate: {
 					isSeparate: true,
 					insertPrefix: "insert",
