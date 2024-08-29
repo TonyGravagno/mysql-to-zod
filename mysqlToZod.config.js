@@ -33,9 +33,6 @@ const options = {
 			references: [],
 		},
 	},
-	sync: {
-		active: true,
-	},
 	separate: {
 		isSeparate: true,
 		insertPrefix: "insert",
