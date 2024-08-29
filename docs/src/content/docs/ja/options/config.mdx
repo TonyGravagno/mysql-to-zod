@@ -5,8 +5,13 @@ author: "araera111"
 
 ## 設定ファイルの置き場
 
-設定ファイルは、実行するディレクトリに置きます。  
-`/home/user/develop/project001`で実行する場合、`/home/user/develop/project001/mysqlToZod.config.js`を設置します。
+`mysql-to-zod`を実行する際、設定ファイルの場所を指定することができます。
+
+```bash
+npx mysql-to-zod mysql://user:password@localhost:3306/dbname -f ./mysqlToZod.config.js
+```
+
+指定がなかった場合は、実行されたディレクトリの直下にある`mysqlToZod.config.js`が読み込まれます。
 
 ## 設定ファイルの書き方
 
