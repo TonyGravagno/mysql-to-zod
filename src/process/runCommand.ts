@@ -4,7 +4,7 @@ import { parseZodSchemaFile } from "../features/sync/utils/syncUtil";
 import { throwError } from "../throwError";
 import { buildSchemaText } from "./buildSchemaText";
 import { composeGlobalSchema } from "./composeGlobalSchema";
-import { getTables } from "./getTables";
+import { getTables } from "./getTables/getTables";
 import { init } from "./init";
 import { outputToFile } from "./outputToFile";
 
