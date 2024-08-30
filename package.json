@@ -45,7 +45,6 @@
   },
   "dependencies": {
     "@mobily/ts-belt": "4.0.0-rc.5",
-    "@prettier/sync": "^0.5.2",
     "camelcase": "^8.0.0",
     "commander": "^12.1.0",
     "cosmiconfig": "^9.0.0",
