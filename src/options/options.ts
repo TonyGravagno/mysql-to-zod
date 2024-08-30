@@ -14,7 +14,7 @@ import { typeOptionSchema } from "./type";
 export const mysqlToZodOptionSchema = z.object({
 	output: outputSchema.optional(),
 	dbConnection: dbConnectionOptionSchema.optional(),
-	tableNames: z.string().array().optional().default([]),
+	tableNames: z.string().array().optional(),
 	comments: optionCommentsSchema.optional(),
 	type: typeOptionSchema.optional(),
 	schema: schemaOptionSchema.optional(),

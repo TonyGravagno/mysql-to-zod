@@ -1,5 +1,5 @@
 import { produce } from "immer";
-import type { AST } from "node-sql-parser";
+import type { AST, Create } from "node-sql-parser";
 import type { OptionTableComments } from "../../../options/comments";
 import {
 	type MysqlToZodOption,
@@ -255,10 +255,10 @@ describe("getTableComment", () => {
 				value: "'International Commercial Airports'",
 			},
 		],
-	};
+	} as AST;
 	const basicTableName = "airport";
 	it("case1 active:true, format:empty", () => {
-		const ast: AST = { ...basicAST };
+		const ast: AST = { ...basicAST, keyword: "database" } as Create;
 		const optionCommentsTable: OptionTableComments = {
 			active: true,
 			format: "",
@@ -274,7 +274,7 @@ describe("getTableComment", () => {
 	});
 
 	it("case2 active:false -> undefined", () => {
-		const ast: AST = { ...basicAST };
+		const ast: AST = { ...basicAST } as Create;
 		const optionCommentsTable: OptionTableComments = {
 			active: false,
 			format: "",
@@ -290,7 +290,7 @@ describe("getTableComment", () => {
 	});
 
 	it("case3 active:true format", () => {
-		const ast: AST = { ...basicAST };
+		const ast: AST = { ...basicAST, keyword: "database" } as Create;
 		const optionCommentsTable: OptionTableComments = {
 			active: true,
 			format: "// [tableName:!name] : comment:!text",
