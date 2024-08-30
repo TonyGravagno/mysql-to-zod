@@ -20,7 +20,7 @@ describe("schemaInformationToText", () => {
 });
 
 describe("mergeSchemaTextWithOldInformation 完成したschemaTextと以前のschemaInformationを合体する関数", () => {
-	it("case1", () => {
+	it("case1", async () => {
 		const schemaName = "aaaSchema";
 		const schemaInformation: SchemaInformation = {
 			tableName: "aaaSchema",
@@ -32,7 +32,7 @@ describe("mergeSchemaTextWithOldInformation 完成したschemaTextと以前のsc
 		const result = `export const aaaSchema = z.object({
   DB_ID: z.number().optional(),
 });`;
-		const ex = mergeSchemaTextWithOldInformation({
+		const ex = await mergeSchemaTextWithOldInformation({
 			schemaInformation,
 			schemaName,
 			schemaText,
@@ -89,7 +89,7 @@ describe("getSchemaInformation", () => {
 });
 
 describe("formatByPrettier", () => {
-	it("case1", () => {
+	it("case1", async () => {
 		const str =
 			"export const myTodoListSchema = z.object({  id: z.number(),  status: z.string(),  task: z.string(),  description: z.string().nullish(),  due_date: z.date().nullish(),  created_at: z.date().nullish(),  updated_at: z.date().nullish(),});";
 		const result = `export const myTodoListSchema = z.object({
@@ -102,6 +102,6 @@ describe("formatByPrettier", () => {
   updated_at: z.date().nullish(),
 });
 `;
-		expect(formatByPrettier(str)).toBe(result);
+		expect(await formatByPrettier(str)).toBe(result);
 	});
 });

@@ -1,11 +1,13 @@
 const options = {
-  dbConnection: {
-    database: "test",
-    host: "localhost",
-    password: "test",
-    port: 33202,
-    user: "test",
+  "dbConnection": {
+    "database": "test",
+    "host": "localhost",
+    "password": "test",
+    "port": 32789,
+    "user": "test"
   },
-  tableNames: ["posts"],
+  "tableNames": [
+    "posts"
+  ]
 };
-module.exports = options;
+    module.exports = options;

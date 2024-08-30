@@ -15,7 +15,7 @@ export const outputToFile = async ({
 	output,
 	globalSchema,
 }: OutputParams) => {
-	const formatted = formatByPrettier(schemaRawText);
+	const formatted = await formatByPrettier(schemaRawText);
 
 	const { fileName, outDir } = pipe(
 		output,
@@ -33,7 +33,7 @@ export const outputToFile = async ({
 
 	/* globalSchema */
 	if (G.isNullable(globalSchema)) return;
-	const globalSchemaFormatted = formatByPrettier(globalSchema);
+	const globalSchemaFormatted = await formatByPrettier(globalSchema);
 	const globalSchemaSavePath = join(process.cwd(), outDir, "globalSchema.ts");
 	writeFileSync(globalSchemaSavePath, globalSchemaFormatted);
 	console.info("\nglobalSchema file created!");
