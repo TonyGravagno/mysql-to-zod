@@ -40,7 +40,7 @@ export const schemaOptionSchema = z
 				maxLength: z.object({
 					active: z.boolean().optional(),
 					inline: z.string().optional().nullable(),
-					global: z.boolean().optional(),
+					global: z.string().optional().nullable(),
 				}).optional(),
 			})
 			.optional(),
@@ -58,7 +58,7 @@ export const schemaOptionSchema = z
 			maxLength: {
 				active: false,
 				inline: null,
-				global: true,
+				global: null,
 			}
 		},
 	});

@@ -329,6 +329,7 @@ export const composeColumnStringList = ({
 
 	const isValidLength = (value: typeof length, datatype: string) =>
 		option.schema?.zod?.maxLength?.active &&
+		!option.schema?.inline &&
 		value &&
 		value > 0 &&
 		datatype != 'DATE' &&
