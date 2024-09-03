@@ -22,16 +22,15 @@ type UpdateSchemaTextProps = {
 	schemaInformation: SchemaInformation;
 };
 
-export const mergeSchemaTextWithOldInformation = ({
+export const mergeSchemaTextWithOldInformation = async ({
 	schemaName,
 	schemaInformation,
 	schemaText,
 }: UpdateSchemaTextProps) => {
 	/* 完成したテキストからschemaInformationをつくる */
-
+	const formatted = await formatByPrettier(schemaText);
 	const nextSchemaInformation = pipe(
-		schemaText,
-		formatByPrettier,
+		formatted,
 		parse,
 		(x) => x[0] as SchemaInformation,
 		(x) => {
@@ -66,7 +65,7 @@ export const mergeSchemaTextWithOldInformation = ({
 	const rawNextSchemaText = schemaInformationToText(
 		replacedSchemaInformation,
 	).join("");
-	const formattedSchemaText = formatByPrettier(rawNextSchemaText);
+	const formattedSchemaText = await formatByPrettier(rawNextSchemaText);
 	return formattedSchemaText.trim();
 };
 
@@ -78,14 +77,14 @@ type CreateSchemaProps = {
 	schemaInformationList: readonly SchemaInformation[];
 	mode: CreateSchemaModeUnion;
 };
-export const createSchema = ({
+export const createSchema = async ({
 	tableName,
 	columns,
 	options,
 	tableComment,
 	schemaInformationList,
 	mode,
-}: CreateSchemaProps): SchemaResult => {
+}: CreateSchemaProps): Promise<SchemaResult> => {
 	const schemaString = columns
 		.map((x) =>
 			composeColumnStringList({ column: x, option: options, mode }).join("\n"),
@@ -114,7 +113,7 @@ export const createSchema = ({
 
 	const merged = G.isNullable(thisSchemaInformation)
 		? schemaText
-		: mergeSchemaTextWithOldInformation({
+		: await mergeSchemaTextWithOldInformation({
 				schemaName,
 				schemaText,
 				schemaInformation: {
@@ -146,16 +145,14 @@ export const createSchema = ({
 	/* isSeparateのとき、関数をinsert modeで再実行する */
 	const separeteInsertSchema =
 		separateSchema.isSeparate && mode === "select"
-			? `\n${
-					createSchema({
-						tableName,
-						columns,
-						options,
-						tableComment,
-						schemaInformationList,
-						mode: "insert",
-					}).schema
-				}`
+			? `\n${await createSchema({
+					tableName,
+					columns,
+					options,
+					tableComment,
+					schemaInformationList,
+					mode: "insert",
+				}).then((x) => x.schema)}`
 			: "";
 
 	return {

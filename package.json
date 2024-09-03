@@ -1,6 +1,6 @@
 {
   "name": "mysql-to-zod",
-  "version": "2.2.0",
+  "version": "2.2.4",
   "description": "Convert MySQL schemas into Zod schemas",
   "source": "src/main.ts",
   "main": "dist/main.js",
@@ -12,7 +12,7 @@
     "mysql-to-zod": "tsx ./src/main.ts",
     "dev": "tsx ./src/main.ts",
     "build": "zx ./build.mjs && zx ./addShebang.mjs",
-    "debugBuild": "esbuild ./src/main.ts --bundle --sourcemap --platform=node --outfile=./dist/main.js",
+    "debugBuild": "esbuild ./src/main.ts --bundle --sourcemap --platform=node --outfile=./dist/main.js --external:prettier",
     "test": "vitest",
     "type": "tsc --noEmit",
     "lint": "pnpm biome check --apply ./src",
@@ -45,7 +45,6 @@
   },
   "dependencies": {
     "@mobily/ts-belt": "4.0.0-rc.5",
-    "@prettier/sync": "^0.5.2",
     "camelcase": "^8.0.0",
     "commander": "^12.1.0",
     "cosmiconfig": "^9.0.0",

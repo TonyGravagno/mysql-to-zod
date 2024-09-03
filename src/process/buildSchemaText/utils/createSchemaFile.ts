@@ -28,11 +28,11 @@ export const convertToColumn = (ast: any) => {
 export const isCreate = (ast: AST): ast is Create =>
 	"create_definitions" in ast;
 
-export const createSchemaFile = (
+export const createSchemaFile = async (
 	tableDefinition: string[], // 0がテーブルネーム、1がテーブル定義
 	options: MysqlToZodOption,
 	schemaInformationList: readonly SchemaInformation[],
-): R.Result<SchemaResult, string> => {
+): Promise<R.Result<SchemaResult, string>> => {
 	const parser = new Parser();
 	const [tableName, tableDefinitionString] = tableDefinition;
 	if (G.isNullable(tableName) || G.isNullable(tableDefinitionString))
@@ -56,7 +56,7 @@ export const createSchemaFile = (
 		optionCommentsTable: options?.comments?.table,
 		tableName,
 	});
-	const { schema } = createSchema({
+	const { schema } = await createSchema({
 		tableName,
 		columns,
 		options,

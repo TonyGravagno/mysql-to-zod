@@ -1,11 +1,12 @@
 import { A, AR, D, G, O, R, pipe } from "@mobily/ts-belt";
 import mysql from "mysql2/promise";
 import { z } from "zod";
-import type { MysqlToZodOption } from "../options";
+import type { MysqlToZodOption } from "../../options";
 import {
 	type DbConnectionOption,
 	dbConnectionOptionSchema,
-} from "../options/dbConnection";
+} from "../../options/dbConnection";
+import { filterTable } from "./utils/getTablesUtil";
 
 const createConnection = async (
 	dbConnection: DbConnectionOption,
@@ -36,10 +37,12 @@ export const getTables = (
 > =>
 	pipe(
 		option.tableNames,
-		O.fromPredicate((x) => G.isNullable(x) || A.isEmpty(x)),
+		O.fromPredicate((x) => G.isNullable(x)),
 		O.match(
 			/* If options has tableNames, return as is */
-			async (some) => R.Ok({ tableNames: some, option }),
+			async (some) => {
+				return R.Ok({ tableNames: some, option });
+			},
 			() => {
 				/* Whether there is a dbConnection in options or args */
 				return R.match(
@@ -66,6 +69,12 @@ export const getTables = (
 									x,
 									stringStringObjectSchema.parse,
 									A.flatMap((x) => D.values(x)),
+									A.filter((tableName) =>
+										filterTable({
+											configTableNameList: option.tableNames ?? [],
+											tableName,
+										}),
+									),
 								),
 								option,
 							})),

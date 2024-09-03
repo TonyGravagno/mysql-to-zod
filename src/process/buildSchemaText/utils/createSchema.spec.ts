@@ -3,7 +3,7 @@ import type { Column } from "../types/buildSchemaTextType";
 import { createSchema } from "./createSchema";
 
 describe("createSchema", () => {
-	it("case 1 separate = false", () => {
+	it("case 1 separate = false", async () => {
 		const tableName = "todo";
 		const columns: Column[] = [
 			{
@@ -32,7 +32,7 @@ export type Todo = z.infer<typeof todoSchema>;`;
 		};
 
 		expect(
-			createSchema({
+			await createSchema({
 				tableName,
 				tableComment: undefined,
 				columns,
@@ -43,7 +43,7 @@ export type Todo = z.infer<typeof todoSchema>;`;
 		).toStrictEqual(result);
 	});
 
-	it("case2 separate = true", () => {
+	it("case2 separate = true", async () => {
 		const tableName = "todo";
 		const columns: Column[] = [
 			{
@@ -75,7 +75,7 @@ export type InsertTodo = z.infer<typeof insertTodoSchema>;`;
 		};
 
 		expect(
-			createSchema({
+			await createSchema({
 				tableName,
 				tableComment: undefined,
 				columns,
@@ -86,7 +86,7 @@ export type InsertTodo = z.infer<typeof insertTodoSchema>;`;
 		).toStrictEqual(result);
 	});
 
-	it("case3 separate = true, suffix", () => {
+	it("case3 separate = true, suffix", async () => {
 		const tableName = "todo";
 		const columns: Column[] = [
 			{
@@ -119,7 +119,7 @@ export type TodoInsert = z.infer<typeof todoInsertSchema>;`;
 		};
 
 		expect(
-			createSchema({
+			await createSchema({
 				tableName,
 				tableComment: undefined,
 				columns,

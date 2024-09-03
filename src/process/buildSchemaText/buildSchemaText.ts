@@ -1,4 +1,4 @@
-import { A, O, R, pipe } from "@mobily/ts-belt";
+import { R } from "@mobily/ts-belt";
 import { produce } from "immer";
 import type { SchemaInformation } from "../../features/sync/types/syncType";
 import type { MysqlToZodOption } from "../../options/options";
@@ -29,46 +29,29 @@ export const buildSchemaText = async ({
 			draft.push("import { globalSchema } from './globalSchema';");
 	}).join("\n");
 
-	const loop = async (
-		restTables: readonly string[],
-		result: SchemaResult,
-	): Promise<R.Result<SchemaResult, string>> => {
-		if (A.isEmpty(restTables)) return R.Ok(result);
-		/* isEmptyで調べているのでgetExnを使用する */
-		const headTable = pipe(restTables, A.head, O.getExn);
-		const tailTables = pipe(restTables, A.tail, O.getExn);
+	const result: SchemaResult = {
+		schema: "",
+		columns: [],
+	};
 
-		const tableDefinition = await getTableDefinition(
-			headTable,
+	for (const table of tables) {
+		const definition = await getTableDefinition(
+			table,
 			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 			option.dbConnection as any,
 		);
-		const schemaTextEither = createSchemaFile(
-			tableDefinition,
+		const schema = await createSchemaFile(
+			definition,
 			option,
 			schemaInformationList,
 		);
+		if (R.isOk(schema)) {
+			result.schema += R.getExn(schema).schema;
+			result.columns.push(...R.getExn(schema).columns);
+		}
+	}
 
-		return R.match(
-			schemaTextEither,
-			(ok) => {
-				const nextResult = produce(result, (draft) => {
-					draft.schema += ok.schema;
-					draft.columns.push(...ok.columns);
-				});
-				return loop(tailTables, nextResult);
-			},
-			async (err) => {
-				return await R.Error(err);
-			},
-		);
-	};
-	const schemaTexts = await loop(tables, {
-		schema: "",
-		columns: [],
-	});
-
-	return R.flatMap(schemaTexts, (x) => {
+	return R.flatMap(R.Ok(result), (x) => {
 		const text = strListToStrLf([importDeclaration, x.schema]);
 		return R.Ok({ text, columns: x.columns, option });
 	});
