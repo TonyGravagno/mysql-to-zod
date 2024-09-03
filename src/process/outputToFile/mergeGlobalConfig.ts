@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs";
-import {} from "@mobily/ts-belt";
-import { isNil } from "rambda";
+import { G } from "@mobily/ts-belt";
 import { formatByPrettier } from "../formatByPrettier";
 type MergeGlobalConfigProps = {
 	globalSchemaPath: string;
@@ -43,7 +42,7 @@ export const mergeGlobalConfig = async ({
 	const loop = (rest: KV[], keyList: string[], result: KV[]): KV[] => {
 		if (rest.length === 0) return result;
 		const [x, ...xs] = rest;
-		if (isNil(x)) return result;
+		if (G.isNullable(x)) return result;
 		const isExist = keyList.includes(x.key);
 		if (isExist) return loop(xs, keyList, result);
 		return loop(xs, [...keyList, x.key], [...result, x]);
