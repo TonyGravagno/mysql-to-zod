@@ -1,8 +1,9 @@
 import { join } from "node:path";
 import { G, O, pipe } from "@mobily/ts-belt";
 import { mkdirpSync, writeFileSync } from "fs-extra";
-import type { OptionOutput } from "../options/output";
-import { formatByPrettier } from "./formatByPrettier";
+import type { OptionOutput } from "../../options/output";
+import { formatByPrettier } from "../formatByPrettier";
+import { mergeGlobalConfig } from "./mergeGlobalConfig";
 
 type OutputParams = {
 	schemaRawText: string;
@@ -35,7 +36,12 @@ export const outputToFile = async ({
 	if (G.isNullable(globalSchema)) return;
 	const globalSchemaFormatted = await formatByPrettier(globalSchema);
 	const globalSchemaSavePath = join(process.cwd(), outDir, "globalSchema.ts");
-	writeFileSync(globalSchemaSavePath, globalSchemaFormatted);
+	const merged = await mergeGlobalConfig({
+		globalSchemaPath: globalSchemaSavePath,
+		newGlobalSchema: globalSchemaFormatted,
+	});
+
+	writeFileSync(globalSchemaSavePath, merged);
 	console.info("\nglobalSchema file created!");
 	console.info("path: ", globalSchemaSavePath);
 };
