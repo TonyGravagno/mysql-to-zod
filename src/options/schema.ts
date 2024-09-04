@@ -37,6 +37,11 @@ export const schemaOptionSchema = z
 			.object({
 				implementation: schemaZodImplementationSchema.array().optional(),
 				references: schemaZodReferencesSchema.array().optional(),
+				maxLength: z.object({
+					active: z.boolean().optional(),
+					inline: z.string().optional().nullable(),
+					global: z.string().optional().nullable(),
+				}).optional(),
 			})
 			.optional(),
 	})
@@ -50,6 +55,11 @@ export const schemaOptionSchema = z
 		zod: {
 			implementation: [],
 			references: [],
+			maxLength: {
+				active: false,
+				inline: null,
+				global: null,
+			}
 		},
 	});
 export type SchemaOption = z.infer<typeof schemaOptionSchema>;

@@ -13,22 +13,39 @@ export const composeGlobalSchemaRow = ({
 	const existReference = option.schema?.zod?.references?.find(
 		(x) => x[0] === type,
 	);
-	return `${
-		existReference ? existReference[1] : `mysql${type}`
-	}: ${convertToZodType({
-		type,
-		option: produce(option, (draft) => {
-			if (draft.schema) {
-				draft.schema.inline = true;
-			}
-		}),
-	})},\n`;
+	return `${existReference ? existReference[1] : `mysql${type}`
+		}: ${convertToZodType({
+			type,
+			option: produce(option, (draft) => {
+				if (draft.schema) {
+					draft.schema.inline = true;
+				}
+			}),
+		})},\n`;
 };
 
 type ComposeGlobalSchemaParams = {
 	typeList: readonly string[];
 	option: MysqlToZodOption;
 };
+
+let maxLengthFunction = `
+maxLength: (arg: any, limit: number, ctx?: RefinementCtx) : boolean => {
+  if (arg?.toString()?.length > limit) {
+    if (ctx)
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_big,
+        maximum: limit,
+        type: typeof arg === "number" ? "number" : "string",
+        inclusive: true,
+		_MSG_
+     });
+    return false;
+  }
+  return true;
+},`;
+
+
 export const composeGlobalSchema = ({
 	typeList,
 	option,
@@ -37,11 +54,21 @@ export const composeGlobalSchema = ({
 	const rows = typeList
 		.map((type) => composeGlobalSchemaRow({ type, option }))
 		.join("");
-
+	if (option.schema?.zod?.maxLength?.active) {
+		let message = ""
+		if (option.schema?.zod?.maxLength?.global) {
+			message = `message: \`${option.schema.zod.maxLength.global}\``
+		}
+		maxLengthFunction = maxLengthFunction.replace("_MSG_", message);
+	} else {
+		maxLengthFunction = "";
+	}
 	const result = [
-		'import { z } from "zod";',
+		'import { z, RefinementCtx } from "zod";',
 		"export const globalSchema = {",
-		`${rows}};`,
+		`${rows}`,
+		`${maxLengthFunction}`,
+		`};`,
 	].join("\n");
 
 	return result;
