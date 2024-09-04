@@ -53,7 +53,9 @@ export const composeGlobalSchema = ({
 	if (option.schema?.inline === true) return undefined;
 	const rows = typeList
 		.map((type) => composeGlobalSchemaRow({ type, option }))
-		.join("");
+		.join("")
+		.split("\n")
+		.filter((x) => x !== "");
 	if (option.schema?.zod?.maxLength?.active) {
 		let message = "";
 		if (option.schema?.zod?.maxLength?.global) {
@@ -63,13 +65,22 @@ export const composeGlobalSchema = ({
 	} else {
 		maxLengthFunction = "";
 	}
+
+	const importStatement =
+		option?.schema?.inline === false &&
+		option?.schema?.zod?.maxLength?.active === true
+			? 'import { z, RefinementCtx } from "zod";'
+			: 'import { z } from "zod";';
+
 	const result = [
-		'import { z, RefinementCtx } from "zod";',
+		importStatement,
 		"export const globalSchema = {",
-		`${rows}`,
+		...rows,
 		`${maxLengthFunction}`,
 		"};",
-	].join("\n");
+	]
+		.filter((x) => x !== "")
+		.join("\n");
 
 	return result;
 };

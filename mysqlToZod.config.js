@@ -39,7 +39,7 @@ const options = {
     insertSuffix: "",
   },
   dbConnection: {
-    database: "test",
+    database: "my_todo",
     host: "localhost",
     password: "root",
     port: 3306,
