@@ -6,7 +6,7 @@ import { buildSchemaText } from "./buildSchemaText";
 import { composeGlobalSchema } from "./composeGlobalSchema";
 import { getTables } from "./getTables/getTables";
 import { init } from "./init";
-import { outputToFile } from "./outputToFile";
+import { outputToFile } from "./outputToFile/outputToFile";
 
 export const runCommand = (command: Command, configFilePath: string) =>
 	pipe(

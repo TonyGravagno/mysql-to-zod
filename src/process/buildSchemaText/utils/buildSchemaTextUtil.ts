@@ -22,66 +22,66 @@ export const isMaybeRegExp = (str: string): boolean =>
 
 /* 
   knex result
-      {
-      tinyint_column: -128,
-      smallint_column: -32768,
-      mediumint_column: -8388608,
-      int_column: -2147483648,
-      bigint_column: -9223372036854776000,
-      float_column: -3.40282e+38,
-      double_column: -1.7976931348623155e+308,
-      decimal_column: '1234.56',
-      date_column: 2023-07-12T15:00:00.000Z,
-      time_column: '23:59:59',
-      datetime_column: 2023-07-13T14:59:59.000Z,
-      timestamp_column: 2023-07-13T14:59:59.000Z,
-      year_column: 2023,
-      char_column: 'char_value',
-      varchar_column: 'varchar_value',
-      binary_column: <Buffer 31 31 31 00 00 00 00 00 00 00>,
-      varbinary_column: <Buffer 76 61 72 62 69 6e 61 72 79 5f 76 61 6c 75 65>,
-      tinyblob_column: <Buffer 74 69 6e 79 62 6c 6f 62 5f 76 61 6c 75 65>,
-      blob_column: <Buffer 62 6c 6f 62 5f 76 61 6c 75 65>,
-      mediumblob_column: <Buffer 6d 65 64 69 75 6d 62 6c 6f 62 5f 76 61 6c 75 65>,
-      longblob_column: <Buffer 6c 6f 6e 67 62 6c 6f 62 5f 76 61 6c 75 65>,
-      tinytext_column: 'tinytext_value',
-      text_column: 'text_value',
-      mediumtext_column: 'mediumtext_value',
-      longtext_column: 'longtext_value',
-      enum_column: 'value1',
-      set_column: 'value2'
-    }
+	  {
+	  tinyint_column: -128,
+	  smallint_column: -32768,
+	  mediumint_column: -8388608,
+	  int_column: -2147483648,
+	  bigint_column: -9223372036854776000,
+	  float_column: -3.40282e+38,
+	  double_column: -1.7976931348623155e+308,
+	  decimal_column: '1234.56',
+	  date_column: 2023-07-12T15:00:00.000Z,
+	  time_column: '23:59:59',
+	  datetime_column: 2023-07-13T14:59:59.000Z,
+	  timestamp_column: 2023-07-13T14:59:59.000Z,
+	  year_column: 2023,
+	  char_column: 'char_value',
+	  varchar_column: 'varchar_value',
+	  binary_column: <Buffer 31 31 31 00 00 00 00 00 00 00>,
+	  varbinary_column: <Buffer 76 61 72 62 69 6e 61 72 79 5f 76 61 6c 75 65>,
+	  tinyblob_column: <Buffer 74 69 6e 79 62 6c 6f 62 5f 76 61 6c 75 65>,
+	  blob_column: <Buffer 62 6c 6f 62 5f 76 61 6c 75 65>,
+	  mediumblob_column: <Buffer 6d 65 64 69 75 6d 62 6c 6f 62 5f 76 61 6c 75 65>,
+	  longblob_column: <Buffer 6c 6f 6e 67 62 6c 6f 62 5f 76 61 6c 75 65>,
+	  tinytext_column: 'tinytext_value',
+	  text_column: 'text_value',
+	  mediumtext_column: 'mediumtext_value',
+	  longtext_column: 'longtext_value',
+	  enum_column: 'value1',
+	  set_column: 'value2'
+	}
 */
 
 /*
   const typeMap = {
-    tinyint: "number",
-    smallint: "number",
-    mediumint: "number",
-    int: "number",
-    bigint: "number",
-    float: "number",
-    double: "number",
-    decimal: "string",
-    date: "date",
-    time: "string",
-    datetime: "date",
-    timestamp: "date",
-    year: "number",
-    char: "string",
-    varchar: "string",
-    binary: "Buffer",
-    varbinary: "Buffer",
-    tinyblob: "Buffer",
-    blob: "Buffer",
-    mediumblob: "Buffer",
-    longblob: "Buffer",
-    tinytext: "string",
-    text: "string",
-    mediumtext: "string",
-    longtext: "string",
-    enum: "string",
-    set: "string",
+	tinyint: "number",
+	smallint: "number",
+	mediumint: "number",
+	int: "number",
+	bigint: "number",
+	float: "number",
+	double: "number",
+	decimal: "string",
+	date: "date",
+	time: "string",
+	datetime: "date",
+	timestamp: "date",
+	year: "number",
+	char: "string",
+	varchar: "string",
+	binary: "Buffer",
+	varbinary: "Buffer",
+	tinyblob: "Buffer",
+	blob: "Buffer",
+	mediumblob: "Buffer",
+	longblob: "Buffer",
+	tinytext: "string",
+	text: "string",
+	mediumtext: "string",
+	longtext: "string",
+	enum: "string",
+	set: "string",
   };
   */
 
@@ -318,7 +318,7 @@ export const composeColumnStringList = ({
 	option,
 	mode,
 }: ComposeColumnStringListProps): string[] => {
-	const { comment, nullable, type, autoIncrement } = column;
+	const { comment, nullable, type, autoIncrement, length } = column;
 	const { comments } = option;
 
 	const zodType = convertToZodType({
@@ -326,10 +326,30 @@ export const composeColumnStringList = ({
 		option,
 	});
 	const maybeNullable = addNullType({ nullable, option, mode, autoIncrement });
+
+	const isValidLength = (value: typeof length, datatype: string) =>
+		option.schema?.zod?.maxLength?.active &&
+		!option.schema?.inline &&
+		value &&
+		value > 0 &&
+		datatype != 'DATE' &&
+		datatype != 'TIMESTAMP';
+
+	const lengthAsString = isValidLength(length, type) ? length?.toString() : '';
+	const inlineLengthMsg =
+		lengthAsString &&
+			option.schema?.zod?.maxLength?.inline ?
+			`, \`${option.schema.zod.maxLength.inline}\``.replace("${limit}", lengthAsString)
+			: '';
+
+	const max = lengthAsString ?
+		`.refine((arg) => globalSchema.maxLength(arg, ${lengthAsString})${inlineLengthMsg})`
+		: '';
+
 	// add other schema details here
 
 	// assemble final schema string
-	const zodSchema = zodType + maybeNullable;
+	const zodSchema = zodType + max + maybeNullable;
 
 	const result: string[] = [
 		getCommentString({
