@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { G, O, pipe } from "@mobily/ts-belt";
 import { mkdirpSync, writeFileSync } from "fs-extra";
@@ -36,12 +37,18 @@ export const outputToFile = async ({
 	if (G.isNullable(globalSchema)) return;
 	const globalSchemaFormatted = await formatByPrettier(globalSchema);
 	const globalSchemaSavePath = join(process.cwd(), outDir, "globalSchema.ts");
-	const merged = await mergeGlobalConfig({
-		globalSchemaPath: globalSchemaSavePath,
-		newGlobalSchema: globalSchemaFormatted,
-	});
 
-	writeFileSync(globalSchemaSavePath, merged);
+	const existsGlobalSchema = existsSync(globalSchemaSavePath);
+	const oldGlobalSchema = readFileSync(globalSchemaSavePath, "utf-8");
+
+	const outputGlobalSchema = existsGlobalSchema
+		? await mergeGlobalConfig({
+				oldGlobalSchema,
+				newGlobalSchema: globalSchemaFormatted,
+			})
+		: globalSchemaFormatted;
+
+	writeFileSync(globalSchemaSavePath, outputGlobalSchema);
 	console.info("\nglobalSchema file created!");
 	console.info("path: ", globalSchemaSavePath);
 };
