@@ -332,19 +332,21 @@ export const composeColumnStringList = ({
 		!option.schema?.inline &&
 		value &&
 		value > 0 &&
-		datatype != 'DATE' &&
-		datatype != 'TIMESTAMP';
+		datatype !== "DATE" &&
+		datatype !== "TIMESTAMP";
 
-	const lengthAsString = isValidLength(length, type) ? length?.toString() : '';
+	const lengthAsString = isValidLength(length, type) ? length?.toString() : "";
 	const inlineLengthMsg =
-		lengthAsString &&
-			option.schema?.zod?.maxLength?.inline ?
-			`, \`${option.schema.zod.maxLength.inline}\``.replace("${limit}", lengthAsString)
-			: '';
+		lengthAsString && option.schema?.zod?.maxLength?.inline
+			? `, \`${option.schema.zod.maxLength.inline}\``.replace(
+					"${limit}",
+					lengthAsString,
+				)
+			: "";
 
-	const max = lengthAsString ?
-		`.refine((arg) => globalSchema.maxLength(arg, ${lengthAsString})${inlineLengthMsg})`
-		: '';
+	const max = lengthAsString
+		? `.refine((arg) => globalSchema.maxLength(arg, ${lengthAsString})${inlineLengthMsg})`
+		: "";
 
 	// add other schema details here
 

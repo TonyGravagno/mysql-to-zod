@@ -1,8 +1,7 @@
-import { readFileSync } from "node:fs";
 import { G } from "@mobily/ts-belt";
 import { formatByPrettier } from "../formatByPrettier";
 type MergeGlobalConfigProps = {
-	globalSchemaPath: string;
+	oldGlobalSchema: string;
 	newGlobalSchema: string;
 };
 type KV = {
@@ -31,11 +30,10 @@ const toKeyValuePair = (schemaText: string) =>
 		});
 
 export const mergeGlobalConfig = async ({
-	globalSchemaPath: path,
+	oldGlobalSchema,
 	newGlobalSchema: globalSchema,
 }: MergeGlobalConfigProps) => {
-	const oldGlobalSchemaText = readFileSync(path, "utf-8");
-	const oldAst = toKeyValuePair(oldGlobalSchemaText);
+	const oldAst = toKeyValuePair(oldGlobalSchema);
 	const newAst = toKeyValuePair(globalSchema);
 	const res = [...oldAst, ...newAst];
 
