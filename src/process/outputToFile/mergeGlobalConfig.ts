@@ -55,17 +55,3 @@ export const mergeGlobalConfig = async ({
 	);
 	return final;
 };
-
-/* mergeGlobalConfig({
-	globalSchemaPath: "./mysqlToZod/globalSchema.ts",
-	newGlobalSchema: `import { z } from "zod";
-export const globalSchema = {
-  NNN: z.number(),
-  mysqlVARCHAR: z.string(),
-  mysqlTINYINT: z.number(),
-  mysqlTIMESTAMP: z.date(),
-};\n'
-}
-`,
-});
- */

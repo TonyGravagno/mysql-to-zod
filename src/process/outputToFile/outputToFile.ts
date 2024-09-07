@@ -39,11 +39,10 @@ export const outputToFile = async ({
 	const globalSchemaSavePath = join(process.cwd(), outDir, "globalSchema.ts");
 
 	const existsGlobalSchema = existsSync(globalSchemaSavePath);
-	const oldGlobalSchema = readFileSync(globalSchemaSavePath, "utf-8");
 
 	const outputGlobalSchema = existsGlobalSchema
 		? await mergeGlobalConfig({
-				oldGlobalSchema,
+				oldGlobalSchema: readFileSync(globalSchemaSavePath, "utf-8"),
 				newGlobalSchema: globalSchemaFormatted,
 			})
 		: globalSchemaFormatted;
