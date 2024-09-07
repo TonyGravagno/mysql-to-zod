@@ -1,4 +1,4 @@
-import { G } from "@mobily/ts-belt";
+import { A, G } from "@mobily/ts-belt";
 import { formatByPrettier } from "../formatByPrettier";
 type MergeGlobalConfigProps = {
 	oldGlobalSchema: string;
@@ -52,12 +52,60 @@ export const mergeGlobalConfig = async ({
 		if (isExist) return loop(xs, keyList, result);
 		return loop(xs, [...keyList, x.key], [...result, x]);
 	};
+
+	const oldImportStatement = oldGlobalSchema
+		.split("\n")
+		.filter((x) => x.includes("import") && x.includes("zod"));
+	const newImportStatement = globalSchema
+		.split("\n")
+		.filter((x) => x.includes("import") && x.includes("zod"));
+
+	const importStateMents = [...oldImportStatement, ...newImportStatement];
+	// loopでmergeImportStatementを処理する
+	const importLoop = (rest: string[], result: string): string => {
+		if (rest.length === 0) return result;
+		const [x, ...xs] = rest;
+		if (G.isNullable(x)) return result;
+		return importLoop(
+			xs,
+			mergeImportStatement({
+				oldImportStatement: result,
+				newImportStatement: x,
+			}),
+		);
+	};
+
 	const result = loop(res, [], []);
-	const importZod = `import { z } from "zod";\n`;
+	const importZod = importLoop(importStateMents, "");
 	const exportGlobal = "export const globalSchema = {\n";
 	const body = result.map((x) => `  ${x.key}: ${x.value}`).join("\n");
 	const end = "};\n";
 	const resultText = `${importZod}${exportGlobal}${body}${end}`;
 	const final = await formatByPrettier(resultText);
 	return final;
+};
+
+type MergeImportStatementProps = {
+	oldImportStatement: string;
+	newImportStatement: string;
+};
+export const mergeImportStatement = ({
+	oldImportStatement,
+	newImportStatement,
+}: MergeImportStatementProps) => {
+	const olds =
+		oldImportStatement
+			.split("{")[1]
+			?.split("}")[0]
+			?.split(",")
+			.map((x) => x.trim()) ?? [];
+	const news =
+		newImportStatement
+			.split("{")[1]
+			?.split("}")[0]
+			?.split(",")
+			.map((x) => x.trim()) ?? [];
+	const merged = [...A.uniq([...olds, ...news])].sort();
+	const result = `import { ${merged.join(", ")} } from "zod";`;
+	return result;
 };

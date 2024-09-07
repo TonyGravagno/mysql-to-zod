@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { type RefinementCtx, z } from "zod";
 export const globalSchema = {
   Timestamp: z.date(),
   maxLength: (arg: any, limit: number, ctx?: RefinementCtx): boolean => {

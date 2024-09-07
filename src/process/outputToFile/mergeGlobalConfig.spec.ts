@@ -1,5 +1,9 @@
-import { readFileSync } from "fs";
-import { mergeGlobalConfig, toKeyValuePair } from "./mergeGlobalConfig";
+import { readFileSync } from "node:fs";
+import {
+	mergeGlobalConfig,
+	mergeImportStatement,
+	toKeyValuePair,
+} from "./mergeGlobalConfig";
 
 describe("mergeGlobalConfig", () => {
 	it("case1", async () => {
@@ -98,5 +102,31 @@ export const globalSchema = {
 				value: "z.date(),",
 			},
 		]);
+	});
+});
+
+describe("mergeImportStatement", () => {
+	it("case1", () => {
+		const oldImport = `import { z } from "zod";`;
+		const newImport = `import { z } from "zod";`;
+		const result = `import { z } from "zod";`;
+		expect(
+			mergeImportStatement({
+				oldImportStatement: oldImport,
+				newImportStatement: newImport,
+			}),
+		).toBe(result);
+	});
+
+	it("case2", () => {
+		const oldImport = `import { z } from "zod";`;
+		const newImport = `import { type RefinementCtx, z } from "zod";`;
+		const result = `import { type RefinementCtx, z } from "zod";`;
+		expect(
+			mergeImportStatement({
+				oldImportStatement: oldImport,
+				newImportStatement: newImport,
+			}),
+		).toBe(result);
 	});
 });
