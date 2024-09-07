@@ -50,8 +50,8 @@ export const mergeGlobalConfig = async ({
 	const exportGlobal = "export const globalSchema = {\n";
 	const body = result.map((x) => `  ${x.key}: ${x.value}`).join("\n");
 	const end = "};\n";
-	const final = await formatByPrettier(
-		`${importZod}${exportGlobal}${body}${end}`,
-	);
+	const resultText = `${importZod}${exportGlobal}${body}${end}`;
+	console.log(resultText);
+	const final = await formatByPrettier(resultText);
 	return final;
 };
