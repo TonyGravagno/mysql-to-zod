@@ -21,8 +21,11 @@ describe("composeGlobalSchema", () => {
 		const typeList = ["DATE"];
 		const option: MysqlToZodOption = basicOption;
 		const result = `import { z } from "zod";
+
 export const globalSchema = {
+
 mysqlDATE: z.date(),
+
 };`;
 		expect(composeGlobalSchema({ typeList, option })).toBe(result);
 	});
@@ -31,8 +34,11 @@ mysqlDATE: z.date(),
 		const typeList = ["TINYINT"];
 		const option: MysqlToZodOption = basicOption;
 		const result = `import { z } from "zod";
+
 export const globalSchema = {
+
 mysqlTINYINT: z.number(),
+
 };`;
 		expect(composeGlobalSchema({ typeList, option })).toBe(result);
 	});
@@ -41,9 +47,13 @@ mysqlTINYINT: z.number(),
 		const typeList = ["TINYINT", "DATE"];
 		const option: MysqlToZodOption = basicOption;
 		const result = `import { z } from "zod";
+
 export const globalSchema = {
+
 mysqlTINYINT: z.number(),
+
 mysqlDATE: z.date(),
+
 };`;
 		expect(composeGlobalSchema({ typeList, option })).toBe(result);
 	});
@@ -68,8 +78,11 @@ mysqlDATE: z.date(),
 			}
 		});
 		const result = `import { z } from "zod";
+
 export const globalSchema = {
+
 mysqlDATE: z.string(),
+
 };`;
 		expect(composeGlobalSchema({ typeList, option })).toBe(result);
 	});
