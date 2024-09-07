@@ -11,23 +11,30 @@ type KV = {
 
 const ignoreList = ["import", "export", "};"];
 
-const toKeyValuePair = (schemaText: string) =>
-	schemaText
-		.split("\n")
+const splitWithDelimiter = (str: string, delimiter: string) => {
+	const regex = new RegExp(`(?=${delimiter})`);
+	return str.split(regex);
+};
+
+export const toKeyValuePair = (schemaText: string) => {
+	return schemaText
+		.replaceAll("\t", "")
+		.split("\n\n")
 		.filter(
 			(line) =>
 				!ignoreList.some((ignoreWord) => line.includes(ignoreWord)) &&
 				line !== "",
 		)
 		.flatMap((x) => {
-			const [key, value] = x.split(":");
-			if (!value || !key) return [];
-
+			const [key, ...value] = splitWithDelimiter(x, ":");
+			const joinedValue = value.join("").replace(":", ""); // delete first colon.
+			if (!joinedValue || !key) return [];
 			return {
 				key: key.trim(),
-				value: value.trim(),
+				value: joinedValue.trim(),
 			};
 		});
+};
 
 export const mergeGlobalConfig = async ({
 	oldGlobalSchema,
@@ -51,7 +58,6 @@ export const mergeGlobalConfig = async ({
 	const body = result.map((x) => `  ${x.key}: ${x.value}`).join("\n");
 	const end = "};\n";
 	const resultText = `${importZod}${exportGlobal}${body}${end}`;
-	console.log(resultText);
 	const final = await formatByPrettier(resultText);
 	return final;
 };

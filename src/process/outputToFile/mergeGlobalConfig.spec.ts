@@ -1,22 +1,34 @@
 import { readFileSync } from "fs";
-import { mergeGlobalConfig } from "./mergeGlobalConfig";
+import { mergeGlobalConfig, toKeyValuePair } from "./mergeGlobalConfig";
 
 describe("mergeGlobalConfig", () => {
 	it("case1", async () => {
 		const old = `import { z } from "zod";
+
 export const globalSchema = {
-  mysqlINT: z.number(),
-  mysqlVARCHAR: z.string(),
-  mysqlTINYINT: z.number(),
-  Timestamp: z.date(),
+
+mysqlINT: z.number(),
+
+mysqlVARCHAR: z.string(),
+
+mysqlTINYINT: z.number(),
+
+Timestamp: z.date(),
+
 };
 `;
 		const newFile = `import { z } from "zod";
-export const globalSchema = {
-  NNN: z.number(),
-  mysqlVARCHAR: z.string(),
-  mysqlTINYINT: z.number(),
-  mysqlTIMESTAMP: z.date(),
+
+		export const globalSchema = {
+
+		NNN: z.number(),
+
+		mysqlVARCHAR: z.string(),
+
+		mysqlTINYINT: z.number(),
+
+		mysqlTIMESTAMP: z.date(),
+
 };
 `;
 
@@ -40,9 +52,13 @@ export const globalSchema = {
 
 	it("case2", async () => {
 		const old = `import { z } from "zod";
+
 export const globalSchema = {
-  Timestamp: z.date(),
+
+Timestamp: z.date(),
+
 };
+
 `;
 		const newSchema = readFileSync("test/files/testGlobalSchema.ts", "utf-8");
 		expect(
@@ -54,8 +70,33 @@ export const globalSchema = {
 	});
 });
 
-describe("readSkipMaxLength", () => {
-	it("", () => {
-		expect().toBe();
+describe("toKeyValuePair", () => {
+	it("case1", () => {
+		const schemaText = readFileSync("test/files/testGlobalSchema.ts", "utf-8");
+		expect(toKeyValuePair(schemaText)).toStrictEqual([
+			{
+				key: "maxLength",
+				value: readFileSync(
+					"test/files/maxLengthValue.txt",
+					"utf-8",
+				).replaceAll("\t", ""),
+			},
+		]);
+	});
+	it("case2", () => {
+		const schemaText = `import { z } from "zod";
+
+export const globalSchema = {
+
+  Timestamp: z.date(),
+
+	};
+`;
+		expect(toKeyValuePair(schemaText)).toStrictEqual([
+			{
+				key: "Timestamp",
+				value: "z.date(),",
+			},
+		]);
 	});
 });
