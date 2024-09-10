@@ -8,3 +8,4 @@ export const outputSchema = z.object({
 });
 
 export type OptionOutput = z.infer<typeof outputSchema>;
+export const outputDefaults = outputSchema.parse({});
