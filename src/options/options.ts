@@ -28,6 +28,8 @@ export const basicMySQLToZodOption: MysqlToZodOption = {
 	output: {
 		outDir: "./mysqlToZod",
 		fileName: "schema.ts",
+		sqlFileName: "schema.sql",
+		saveSql: false,
 	},
 	tableNames: [],
 	comments: {
