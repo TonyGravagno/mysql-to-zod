@@ -35,10 +35,10 @@ export const buildSchemaText = async ({
 	};
 
 	for (const table of tables) {
-		const definition = await getTableDefinition(
-			table,
-			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-			option.dbConnection as any,
+		const definition = await getTableDefinition({
+			tableName: table,
+			option
+		}
 		);
 		const schema = await createSchemaFile(
 			definition,
