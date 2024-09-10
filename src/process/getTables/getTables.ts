@@ -11,7 +11,8 @@ import { filterTable } from "./utils/getTablesUtil";
 const createConnection = async (
 	dbConnection: DbConnectionOption,
 ): Promise<mysql.Connection> => {
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	// mysql2@3.11.0\node_modules\mysql2\typings\mysql\lib\Connection.d.ts
+	// biome-ignore lint/suspicious/noExplicitAny: Accepts string or ConnectionOptions
 	const connection = await mysql.createConnection(dbConnection as any);
 	return connection;
 };

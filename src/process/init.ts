@@ -31,6 +31,14 @@ export const configLoad = async (
   configがleftで、かつargv[0]がない場合はエラーを出す
   configがrightで、argv[0]がないときは、configのdbConnectionを使う
   configがleftで、argv[0]があるときは、argv[0]を使う
+
+  If dbConnection exists, return it.
+  If argv[0] exists, argv[0] takes precedence
+  Load config.
+  If the config is present, but there is no dbConnection defined, and there is no argv[0], an error is issued.
+  If there is no config file, and argv[0] is missing, an error is issued.
+  If there is a config file, and argv[0] is missing, use dbConnection from the config.
+  ! Whether or not there is a config, if argv[0] is present, use argv[0]. (does not match 日本語)
 */
 
 type GetDBConnectionProps = {

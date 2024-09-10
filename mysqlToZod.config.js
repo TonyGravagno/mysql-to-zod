@@ -3,6 +3,9 @@ const options = {
 	output: {
 		outDir: "./mysqlToZod",
 		fileName: "schema.ts",
+		sqlFileName: "tables.ts",
+		globalSchemaFileName: "globalSchema.ts",
+		saveSql: false,
 	},
 	comments: {
 		table: {
