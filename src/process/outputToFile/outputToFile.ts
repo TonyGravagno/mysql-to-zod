@@ -1,53 +1,133 @@
-import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { G, O, pipe } from "@mobily/ts-belt";
-import { mkdirpSync, writeFileSync } from "fs-extra";
-import type { OptionOutput } from "../../options/output";
-import { formatByPrettier } from "../formatByPrettier";
-import { mergeGlobalConfig } from "./mergeGlobalConfig";
+import { G } from "@mobily/ts-belt";
+import { mkdirpSync, readFileSync, writeFileSync } from "fs-extra";
+import { type OptionOutput, outputDefaults } from "../../options";
+import {
+	type SupportedFormatters,
+	formatByPrettier,
+} from "../formatByPrettier";
 
-type OutputParams = {
+export type SchemaOutputParams = {
 	schemaRawText: string;
-	globalSchema: string | undefined;
-	output: OptionOutput | undefined;
+	globalSchema?: string;
+	output?: OptionOutput;
 };
 
-export const outputToFile = async ({
-	schemaRawText,
-	output,
-	globalSchema,
-}: OutputParams) => {
-	const formatted = await formatByPrettier(schemaRawText);
+export type SqlOutputParams = {
+	sql: string[];
+	output?: OptionOutput;
+};
 
-	const { fileName, outDir } = pipe(
-		output,
-		O.fromNullable,
-		O.getWithDefault({
-			fileName: "schema.ts",
-			outDir: "./mysqlToZod",
-		}),
-	);
+/**
+ * General purpose output: Creates a folder if not exists, writes content to a file, and logs the result.
+ * @param {string} outDir - Directory to save the file.
+ * @param {string} fileName - File name for the output file.
+ * @param {string} content - Content (usually formatted code) to be written to the file.
+ * @param {string} fileType - Type of the file being written (for logging purposes).
+ */
+export const writeLocalFile = (
+	outDir: string,
+	fileName: string,
+	content: string,
+	formatType?: SupportedFormatters,
+) => {
 	mkdirpSync(outDir);
 	const savePath = join(process.cwd(), outDir, fileName);
-	writeFileSync(savePath, formatted);
-	console.info("schema file created!");
+	writeFileSync(savePath, content);
+
+	let fileType = "";
+	switch (formatType) {
+		case "babel-ts":
+			fileType = "TS code file";
+			break;
+		case "sql":
+			fileType = "SQL file";
+			break;
+		default:
+			fileType = "File";
+			break;
+	}
+
+	console.info(`${fileType} created!`);
 	console.info("path: ", savePath);
+};
 
-	/* globalSchema */
-	if (G.isNullable(globalSchema)) return;
-	const globalSchemaFormatted = await formatByPrettier(globalSchema);
-	const globalSchemaSavePath = join(process.cwd(), outDir, "globalSchema.ts");
+/**
+ * Formats content (TS or SQL) and calls writeLocalFile to save the file.
+ * @param {string} rawText - The raw text content to be formatted.
+ * @param {string} formatType - Format type for prettier (e.g., "babel-ts", "sql").
+ * @param {OptionOutput} output - Output options containing directory and file name.
+ * @param {string} fileNameOverride - If present, use this file name rather than options value or default.
+ */
+export const writeFormattedFile = async (
+	rawText: string,
+	formatType: SupportedFormatters,
+	fileName: string,
+	output?: OptionOutput,
+) => {
+	let formatted = await formatByPrettier(rawText, formatType);
+	const outDir = output?.outDir || outputDefaults.outDir;
 
-	const existsGlobalSchema = existsSync(globalSchemaSavePath);
+	// Temporary
+	if (
+		formatType === "sql" &&
+		output?.saveSql &&
+		output?.sqlFileName !== "tablename"
+	) {
+		// append, don't replace
+		const savePath = join(process.cwd(), outDir, fileName);
+		try {
+			const existing = readFileSync(savePath, "utf-8");
+			formatted = `${existing}\n${formatted}`;
+		} catch (_ignoreFileDoesntExistError) {}
+	}
 
-	const outputGlobalSchema = existsGlobalSchema
-		? await mergeGlobalConfig({
-				oldGlobalSchema: readFileSync(globalSchemaSavePath, "utf-8"),
-				newGlobalSchema: globalSchemaFormatted,
-			})
-		: globalSchemaFormatted;
+	writeLocalFile(outDir, fileName, formatted, formatType);
+};
 
-	writeFileSync(globalSchemaSavePath, outputGlobalSchema);
-	console.info("\nglobalSchema file created!");
-	console.info("path: ", globalSchemaSavePath);
+/**
+ * Handles the SQL output to a file.
+ * @param {SqlOutputParams} params - SQL text and output specs
+ */
+export const outputSqlToFile = async ({ sql, output }: SqlOutputParams) => {
+	// first line is the table name
+	const tableName = sql.slice(0, 1);
+	const sqlQuery = sql.slice(1).join("\n"); // remove first line = tablename
+
+	// if "tablename" is hardcoded in config file, use current table, otherwise use filename from config, or default
+	const fileName =
+		output?.sqlFileName === "tablename"
+			? `${tableName}.sql`
+			: output?.sqlFileName || outputDefaults.sqlFileName;
+
+	await writeFormattedFile(sqlQuery, "sql", fileName, output);
+};
+
+/**
+ * Handles the schema output, including the global schema if provided.
+ * @param {SchemaOutputParams} params - TS/Zod code, output specs, maybe globalSchema
+ */
+export const outputSchemaToFile = async ({
+	schemaRawText,
+	globalSchema,
+	output,
+}: SchemaOutputParams) => {
+	// if "tablename" is hardcoded in config file, use current table, otherwise use filename from config, or default
+	const fileName =
+		output?.fileName === "tablename"
+			? "tablename.ts"
+			: output?.fileName || outputDefaults.fileName;
+	// TODO: Not fully implemented yet - we don't have the table name here.
+
+	await writeFormattedFile(schemaRawText, "babel-ts", fileName, output);
+
+	/* Handle global schema if provided */
+	if (!G.isNullable(globalSchema)) {
+		await writeFormattedFile(
+			globalSchema,
+			"babel-ts",
+			"globalSchema.ts",
+			output,
+		);
+	}
 };
