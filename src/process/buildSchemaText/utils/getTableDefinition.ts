@@ -1,14 +1,17 @@
 import mysql from "mysql2/promise";
 import { z } from "zod";
-import { outputSqlToFile } from "../../outputToFile";
-import { MysqlToZodOption } from "../../../options";
+import type { MysqlToZodOption } from "../../../options";
+import { outputSqlToFile } from "../../outputToFile/outputToFile";
 
 export type RequestForTable = {
-	tableName: string,
-	option: MysqlToZodOption
-}
+	tableName: string;
+	option: MysqlToZodOption;
+};
 
-export const getTableDefinition = async ({ tableName, option }: RequestForTable) => {
+export const getTableDefinition = async ({
+	tableName,
+	option,
+}: RequestForTable) => {
 	// mysql2@3.11.0\node_modules\mysql2\typings\mysql\lib\Connection.d.ts
 	// biome-ignore lint/suspicious/noExplicitAny: Accepts string or ConnectionOptions
 	const connection = await mysql.createConnection(option.dbConnection as any);
@@ -18,7 +21,6 @@ export const getTableDefinition = async ({ tableName, option }: RequestForTable)
 	const result = table.flatMap((x: any) => Object.values(x));
 	await connection.destroy();
 	const sql = z.string().array().parse(result);
-	if (option?.output?.saveSql)
-		outputSqlToFile({ sql, output: option.output });
+	if (option?.output?.saveSql) outputSqlToFile({ sql, output: option.output });
 	return sql;
 };
