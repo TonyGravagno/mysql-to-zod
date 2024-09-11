@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { G } from "@mobily/ts-belt";
 import { mkdirpSync, readFileSync, writeFileSync } from "fs-extra";
+import { P, match } from "ts-pattern";
 import { type OptionOutput, outputDefaults } from "../../options";
 import {
 	type SupportedFormatters,
@@ -35,18 +36,11 @@ export const writeLocalFile = (
 	const savePath = join(process.cwd(), outDir, fileName);
 	writeFileSync(savePath, content);
 
-	let fileType = "";
-	switch (formatType) {
-		case "babel-ts":
-			fileType = "TS code file";
-			break;
-		case "sql":
-			fileType = "SQL file";
-			break;
-		default:
-			fileType = "File";
-			break;
-	}
+	const fileType = match(formatType)
+		.with("babel-ts", () => "TS code file")
+		.with("sql", () => "SQL file")
+		.with(P.nullish, () => "File")
+		.exhaustive();
 
 	console.info(`${fileType} created!`);
 	console.info("path: ", savePath);
