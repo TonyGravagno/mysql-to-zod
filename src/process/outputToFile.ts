@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { G, O, pipe } from "@mobily/ts-belt";
-import { mkdirpSync, writeFileSync } from "fs-extra";
+import { mkdirpSync, writeFileSync, readFileSync } from "fs-extra";
 import { OptionOutput, outputDefaults } from "../options/output";
 import { formatByPrettier, SupportedFormatters } from "../process/formatByPrettier";
 
@@ -52,8 +52,19 @@ export const writeLocalFile = (outDir: string, fileName: string, content: string
  * @param {string} fileNameOverride - If present, use this file name rather than options value or default.
  */
 export const writeFormattedFile = async (rawText: string, formatType: SupportedFormatters, fileName: string, output?: OptionOutput) => {
-    const formatted = await formatByPrettier(rawText, formatType);
+    let formatted = await formatByPrettier(rawText, formatType);
     const outDir = output?.outDir || outputDefaults.outDir;
+
+    // Temporary
+    if (formatType == "sql" && output?.saveSql && output?.sqlFileName !== "tablename") { // append, don't replace
+        const savePath = join(process.cwd(), outDir, fileName);
+        try {
+            const existing = readFileSync(savePath, "utf-8");
+            formatted = existing + "\n" + formatted;
+        } catch (ignoreFileDoesntExistError) {            
+        }   
+    }
+
     writeLocalFile(outDir, fileName, formatted, formatType);
 };
 
@@ -77,7 +88,7 @@ export const outputSqlToFile = async ({ sql, output }: SqlOutputParams) => {
  * @param {SchemaOutputParams} params - TS/Zod code, output specs, maybe globalSchema
  */
 export const outputSchemaToFile = async ({ schemaRawText, globalSchema, output }: SchemaOutputParams) => {
-    
+
     // if "tablename" is hardcoded in config file, use current table, otherwise use filename from config, or default
     let fileName = output?.fileName === "tablename" ? `tablename.ts` : output?.fileName || outputDefaults.fileName;
     // TODO: Not fully implemented yet - we don't have the table name here.
