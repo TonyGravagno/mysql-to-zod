@@ -5,7 +5,7 @@ import {
 	optionCommentsSchema,
 } from "./comments";
 import { dbConnectionOptionSchema } from "./dbConnection";
-import { outputSchema, outputDefaults } from "./output";
+import { outputDefaults, outputSchema } from "./output";
 import { schemaOptionSchema } from "./schema";
 import { separateOptionSchema } from "./separate";
 import { syncOptionSchema } from "./sync";

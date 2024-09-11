@@ -2,9 +2,12 @@ import prettier from "prettier";
 import "prettier-plugin-sql"; // Ensure the plugin is imported
 import SqlPlugin from "prettier-plugin-sql";
 
-export type SupportedFormatters = "babel-ts" | "sql" ;
+export type SupportedFormatters = "babel-ts" | "sql";
 
-export const formatByPrettier = async (str: string, type: SupportedFormatters = "babel-ts"): Promise<string> => {
+export const formatByPrettier = async (
+	str: string,
+	type: SupportedFormatters = "babel-ts",
+): Promise<string> => {
 	switch (type) {
 		case "babel-ts":
 			return prettier.format(str, {
@@ -15,12 +18,10 @@ export const formatByPrettier = async (str: string, type: SupportedFormatters = 
 				parser: "sql",
 				plugins: [SqlPlugin],
 				sql: {
-					keywordCase: "upper"
-				}
+					keywordCase: "upper",
+				},
 			});
 		default:
 			return "";
-
 	}
-
-}
+};

@@ -37,9 +37,8 @@ export const buildSchemaText = async ({
 	for (const table of tables) {
 		const definition = await getTableDefinition({
 			tableName: table,
-			option
-		}
-		);
+			option,
+		});
 		const schema = await createSchemaFile(
 			definition,
 			option,
