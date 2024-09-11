@@ -6,6 +6,7 @@ import type { Column, SchemaResult } from "./types/buildSchemaTextType";
 import { strListToStrLf } from "./utils/buildSchemaTextUtil";
 import { createSchemaFile } from "./utils/createSchemaFile";
 import { getTableDefinition } from "./utils/getTableDefinition";
+import { outputDefaults } from "../../options";
 
 type BuildSchemaTextParams = {
 	tables: readonly string[];
@@ -25,8 +26,12 @@ export const buildSchemaText = async ({
 	schemaInformationList,
 }: BuildSchemaTextParams): Promise<R.Result<BuildSchemaTextResult, string>> => {
 	const importDeclaration = produce(['import { z } from "zod";'], (draft) => {
-		if (!option.schema?.inline)
-			draft.push("import { globalSchema } from './globalSchema';");
+		if (!option.schema?.inline) {
+			// get global schema file name, from config or default, strip trailing file extension (.ts)
+			// this implies filename cannot have a period other than the extension delimiter
+			const globalSchemaFileName = (option.output?.globalSchemaFileName || outputDefaults.globalSchemaFileName).split('.')[0];
+			draft.push(`import { globalSchema } from './${globalSchemaFileName}';`);
+		}
 	}).join("\n");
 
 	const result: SchemaResult = {

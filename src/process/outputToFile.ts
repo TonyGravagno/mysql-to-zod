@@ -61,8 +61,8 @@ export const writeFormattedFile = async (rawText: string, formatType: SupportedF
         try {
             const existing = readFileSync(savePath, "utf-8");
             formatted = existing + "\n" + formatted;
-        } catch (ignoreFileDoesntExistError) {            
-        }   
+        } catch (ignoreFileDoesntExistError) {
+        }
     }
 
     writeLocalFile(outDir, fileName, formatted, formatType);
@@ -97,6 +97,6 @@ export const outputSchemaToFile = async ({ schemaRawText, globalSchema, output }
 
     /* Handle global schema if provided */
     if (!G.isNullable(globalSchema)) {
-        await writeFormattedFile(globalSchema, "babel-ts", "globalSchema.ts", output);
+        await writeFormattedFile(globalSchema, "babel-ts", output?.globalSchemaFileName || outputDefaults.globalSchemaFileName, output);
     }
 };
