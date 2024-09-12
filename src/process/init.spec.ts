@@ -8,6 +8,8 @@ describe("configLoad", () => {
 				output: {
 					outDir: "./mysqlToZod",
 					fileName: "schema.ts",
+					saveSql: false,
+					sqlFileName: "tables.sql",
 				},
 				comments: {
 					table: {

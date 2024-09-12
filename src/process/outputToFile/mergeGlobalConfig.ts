@@ -1,4 +1,5 @@
 import { A, G, pipe } from "@mobily/ts-belt";
+import { existsSync, readFileSync } from "fs-extra";
 import { formatByPrettier } from "../formatByPrettier";
 type MergeGlobalConfigProps = {
 	oldGlobalSchema: string;
@@ -128,4 +129,22 @@ export const mergeImportStatement = ({
 	const merged = [...A.uniq([...olds, ...news])].sort();
 	const result = `import { ${merged.join(", ")} } from "zod";`;
 	return result;
+};
+
+type MergeGlobalSchemaWrapperProps = {
+	newGlobalSchema: string;
+	outputDir: string;
+};
+export const mergeGlobalSchemaWrapper = async ({
+	newGlobalSchema,
+	outputDir,
+}: MergeGlobalSchemaWrapperProps) => {
+	if (existsSync(outputDir)) {
+		const result = await mergeGlobalConfig({
+			oldGlobalSchema: readFileSync(outputDir, "utf-8"),
+			newGlobalSchema,
+		});
+		return result;
+	}
+	return newGlobalSchema;
 };
