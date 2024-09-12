@@ -22,17 +22,23 @@ export type SqlOutputParams = {
 
 /**
  * General purpose output: Creates a folder if not exists, writes content to a file, and logs the result.
- * @param {string} outDir - Directory to save the file.
+ * @param {string} outputTo - Directory to save the file or config data that has that detail.
  * @param {string} fileName - File name for the output file.
  * @param {string} content - Content (usually formatted code) to be written to the file.
  * @param {string} fileType - Type of the file being written (for logging purposes).
  */
 export const writeLocalFile = (
-	outDir: string,
+	outputTo: string | OptionOutput | undefined,
 	fileName: string,
 	content: string,
 	formatType?: SupportedFormatters,
 ) => {
+	const outDir =
+		typeof outputTo === "string" && outputTo.length > 0
+			? outputTo
+			: (typeof outputTo === "object" && outputTo?.outDir) ||
+				outputDefaults.outDir;
+
 	mkdirpSync(outDir);
 	const savePath = join(process.cwd(), outDir, fileName);
 	writeFileSync(savePath, content);
@@ -61,7 +67,6 @@ export const writeFormattedFile = async (
 	output?: OptionOutput,
 ) => {
 	let formatted = await formatByPrettier(rawText, formatType);
-	const outDir = output?.outDir || outputDefaults.outDir;
 
 	// Temporary
 	if (
@@ -70,6 +75,7 @@ export const writeFormattedFile = async (
 		output?.sqlFileName !== "tablename"
 	) {
 		// append, don't replace
+		const outDir = output?.outDir || outputDefaults.outDir;
 		const savePath = join(process.cwd(), outDir, fileName);
 		try {
 			const existing = readFileSync(savePath, "utf-8");
@@ -77,7 +83,7 @@ export const writeFormattedFile = async (
 		} catch (_ignoreFileDoesntExistError) {}
 	}
 
-	writeLocalFile(outDir, fileName, formatted, formatType);
+	writeLocalFile(output, fileName, formatted, formatType);
 };
 
 /**
