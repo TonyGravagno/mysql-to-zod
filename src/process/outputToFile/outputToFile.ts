@@ -122,6 +122,11 @@ export const outputSchemaToFile = async ({
 			newGlobalSchema: globalSchema,
 			outputDir: output?.outDir || outputDefaults.outDir,
 		});
-		await writeFormattedFile(merged, "babel-ts", "globalSchema.ts", output);
+		await writeFormattedFile(
+			merged,
+			"babel-ts",
+			output?.globalSchemaFileName || outputDefaults.globalSchemaFileName,
+			output,
+		);
 	}
 };
