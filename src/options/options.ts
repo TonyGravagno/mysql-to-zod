@@ -31,6 +31,7 @@ export const basicMySQLToZodOption: MysqlToZodOption = {
 		globalSchemaFileName: outputDefaults.globalSchemaFileName,
 		sqlFileName: outputDefaults.sqlFileName,
 		saveSql: false,
+		saveAst: false,
 	},
 	tableNames: [],
 	comments: {

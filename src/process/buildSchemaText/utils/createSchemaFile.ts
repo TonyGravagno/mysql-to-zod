@@ -6,6 +6,7 @@ import type { MysqlToZodOption } from "../../../options/options";
 import { type SchemaResult, columnsSchema } from "../types/buildSchemaTextType";
 import { getTableComment } from "./buildSchemaTextUtil";
 import { createSchema } from "./createSchema";
+import { writeLocalFile } from "../../outputToFile";
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const convertToColumn = (ast: any) => {
 	if (G.isNullable(ast.column)) return undefined;
@@ -50,6 +51,11 @@ export const createSchemaFile = async (
 			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 			.flatMap((x: any) => (G.isNullable(x) ? [] : x)),
 	);
+
+    if (options?.output?.saveAst) {
+		const astJson = JSON.stringify(ast, null, 2);
+		writeLocalFile(options?.output,`${tableName}_ast.json`,astJson)
+	}
 
 	const tableComment = getTableComment({
 		ast,
