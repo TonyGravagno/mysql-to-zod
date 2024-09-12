@@ -1,3 +1,4 @@
+import { join } from "node:path";
 import { A, G, pipe } from "@mobily/ts-belt";
 import { existsSync, readFileSync } from "fs-extra";
 import { formatByPrettier } from "../formatByPrettier";
@@ -139,9 +140,10 @@ export const mergeGlobalSchemaWrapper = async ({
 	newGlobalSchema,
 	outputDir,
 }: MergeGlobalSchemaWrapperProps) => {
-	if (existsSync(outputDir)) {
+	const globalSchemaPath = join(outputDir, "globalSchema.ts");
+	if (existsSync(globalSchemaPath)) {
 		const result = await mergeGlobalConfig({
-			oldGlobalSchema: readFileSync(outputDir, "utf-8"),
+			oldGlobalSchema: readFileSync(globalSchemaPath, "utf-8"),
 			newGlobalSchema,
 		});
 		return result;

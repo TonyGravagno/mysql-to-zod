@@ -119,7 +119,7 @@ export const outputSchemaToFile = async ({
 	/* Handle global schema if provided */
 	if (!G.isNullable(globalSchema)) {
 		const merged = await mergeGlobalSchemaWrapper({
-			newGlobalSchema: schemaRawText,
+			newGlobalSchema: globalSchema,
 			outputDir: output?.outDir || outputDefaults.outDir,
 		});
 		await writeFormattedFile(merged, "babel-ts", "globalSchema.ts", output);
