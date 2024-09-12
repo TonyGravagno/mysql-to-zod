@@ -62,8 +62,12 @@ export const mergeGlobalConfig = async ({
 	oldGlobalSchema,
 	newGlobalSchema: globalSchema,
 }: MergeGlobalConfigProps) => {
-	const oldAst = toKeyValuePair(oldGlobalSchema);
-	const newAst = toKeyValuePair(globalSchema);
+	// forced use tabs format.
+	const formattedOld = await formatByPrettier(oldGlobalSchema);
+	const formattedNew = await formatByPrettier(globalSchema);
+
+	const oldAst = toKeyValuePair(formattedOld);
+	const newAst = toKeyValuePair(formattedNew);
 	const res = [...oldAst, ...newAst];
 
 	const loop = (rest: KV[], keyList: string[], result: KV[]): KV[] => {
