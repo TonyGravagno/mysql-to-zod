@@ -38,12 +38,12 @@ Timestamp: z.date(),
 
 		const result = `import { z } from "zod";
 export const globalSchema = {
-  mysqlINT: z.number(),
-  mysqlVARCHAR: z.string(),
-  mysqlTINYINT: z.number(),
-  Timestamp: z.date(),
-  NNN: z.number(),
-  mysqlTIMESTAMP: z.date(),
+	mysqlINT: z.number(),
+	mysqlVARCHAR: z.string(),
+	mysqlTINYINT: z.number(),
+	Timestamp: z.date(),
+	NNN: z.number(),
+	mysqlTIMESTAMP: z.date(),
 };
 `;
 		expect(
@@ -56,11 +56,8 @@ export const globalSchema = {
 
 	it("case2", async () => {
 		const old = `import { z } from "zod";
-
 export const globalSchema = {
-
 Timestamp: z.date(),
-
 };
 
 `;
