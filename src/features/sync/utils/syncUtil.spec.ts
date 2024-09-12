@@ -30,7 +30,7 @@ describe("mergeSchemaTextWithOldInformation 完成したschemaTextと以前のsc
 			"export const aaaSchema = z.object({ DB_ID: z.number() });";
 
 		const result = `export const aaaSchema = z.object({
-  DB_ID: z.number().optional(),
+	DB_ID: z.number().optional(),
 });`;
 		const ex = await mergeSchemaTextWithOldInformation({
 			schemaInformation,
@@ -93,13 +93,13 @@ describe("formatByPrettier", () => {
 		const str =
 			"export const myTodoListSchema = z.object({  id: z.number(),  status: z.string(),  task: z.string(),  description: z.string().nullish(),  due_date: z.date().nullish(),  created_at: z.date().nullish(),  updated_at: z.date().nullish(),});";
 		const result = `export const myTodoListSchema = z.object({
-  id: z.number(),
-  status: z.string(),
-  task: z.string(),
-  description: z.string().nullish(),
-  due_date: z.date().nullish(),
-  created_at: z.date().nullish(),
-  updated_at: z.date().nullish(),
+	id: z.number(),
+	status: z.string(),
+	task: z.string(),
+	description: z.string().nullish(),
+	due_date: z.date().nullish(),
+	created_at: z.date().nullish(),
+	updated_at: z.date().nullish(),
 });
 `;
 		expect(await formatByPrettier(str)).toBe(result);

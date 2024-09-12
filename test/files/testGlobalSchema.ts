@@ -1,7 +1,6 @@
 import { type RefinementCtx, z } from "zod";
 
 export const globalSchema = {
-
 	maxLength: (arg: any, limit: number, ctx?: RefinementCtx): boolean => {
 		if (arg?.toString()?.length > limit) {
 			if (ctx)
@@ -16,5 +15,4 @@ export const globalSchema = {
 		}
 		return true;
 	},
-	
 };
