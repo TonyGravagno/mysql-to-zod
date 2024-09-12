@@ -27,14 +27,14 @@ const options = {
     suffix: "Schema",
     replacements: [],
     nullType: "nullish",
-    inline: true,
+    inline: false,
     zod: {
       implementation: [],
       references: [],
     },
   },
   separate: {
-    isSeparate: true,
+    isSeparate: false,
     insertPrefix: "insert",
     insertSuffix: "",
   },

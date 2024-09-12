@@ -75,7 +75,7 @@ Timestamp: z.date(),
 });
 
 describe("toKeyValuePair", () => {
-	it.only("case1", () => {
+	it("case1", () => {
 		const schemaText = readFileSync("test/files/testGlobalSchema.ts", "utf-8");
 		expect(toKeyValuePair(schemaText)).toStrictEqual([
 			{
@@ -87,7 +87,7 @@ describe("toKeyValuePair", () => {
 			},
 		]);
 	});
-	it.only("case2", () => {
+	it("case2", () => {
 		const schemaText = `import { z } from "zod";
 
 export const globalSchema = {
