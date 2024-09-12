@@ -3,6 +3,8 @@ const options = {
 	output: {
 		outDir: "./mysqlToZod",
 		fileName: "schema.ts",
+		sqlFileName: "tables.sql",
+		saveSql: true,
 	},
 	comments: {
 		table: {
@@ -27,7 +29,7 @@ const options = {
 		suffix: "Schema",
 		replacements: [],
 		nullType: "nullish",
-		inline: true,
+		inline: false,
 		zod: {
 			implementation: [],
 			references: [],

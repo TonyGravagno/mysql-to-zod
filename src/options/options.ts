@@ -5,7 +5,7 @@ import {
 	optionCommentsSchema,
 } from "./comments";
 import { dbConnectionOptionSchema } from "./dbConnection";
-import { outputSchema } from "./output";
+import { outputDefaults, outputSchema } from "./output";
 import { schemaOptionSchema } from "./schema";
 import { separateOptionSchema } from "./separate";
 import { syncOptionSchema } from "./sync";
@@ -26,8 +26,10 @@ export type MysqlToZodOption = z.infer<typeof mysqlToZodOptionSchema>;
 
 export const basicMySQLToZodOption: MysqlToZodOption = {
 	output: {
-		outDir: "./mysqlToZod",
-		fileName: "schema.ts",
+		outDir: outputDefaults.outDir,
+		fileName: outputDefaults.fileName,
+		sqlFileName: outputDefaults.sqlFileName,
+		saveSql: false,
 	},
 	tableNames: [],
 	comments: {

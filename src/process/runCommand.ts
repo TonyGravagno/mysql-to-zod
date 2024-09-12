@@ -6,7 +6,7 @@ import { buildSchemaText } from "./buildSchemaText";
 import { composeGlobalSchema } from "./composeGlobalSchema";
 import { getTables } from "./getTables/getTables";
 import { init } from "./init";
-import { outputToFile } from "./outputToFile/outputToFile";
+import { outputSchemaToFile } from "./outputToFile/outputToFile";
 
 export const runCommand = (command: Command, configFilePath: string) =>
 	pipe(
@@ -39,7 +39,7 @@ export const runCommand = (command: Command, configFilePath: string) =>
 				),
 				option,
 			});
-			await outputToFile({
+			await outputSchemaToFile({
 				schemaRawText: text,
 				output: option.output,
 				globalSchema,

@@ -55,11 +55,11 @@ describe("getSchemaInformation", () => {
 	});
 	it("case2", () => {
 		const text = `export const configCancelSchema = z.object({
-  DB_ID: z.number(),
-  GROUP_ID: z.number(),
-  sort_key: z.number(),
-  disp_cancel: z.number(),
-  cancel_text: z.string(),
+	DB_ID: z.number(),
+	GROUP_ID: z.number(),
+	sort_key: z.number(),
+	disp_cancel: z.number(),
+	cancel_text: z.string(),
 });`;
 		const result: SchemaInformation[] = [
 			{

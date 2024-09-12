@@ -56,11 +56,8 @@ export const globalSchema = {
 
 	it("case2", async () => {
 		const old = `import { z } from "zod";
-
 export const globalSchema = {
-
 Timestamp: z.date(),
-
 };
 
 `;
