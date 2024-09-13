@@ -3,11 +3,7 @@ title: "Comments"
 author: "araera111"
 ---
 
-## Comment Setting
-
-## Setting items
-
-The configuration of the comments takes the following object.
+mysql-to-zod can optionally save comments from the DBMS to the generated TypeScript .ts files. There are two kinds of comments, table comments and column comments. The config file section `options.comments` defines which comments are desired, if any.
 
 ```js
 const options = {
@@ -25,12 +21,34 @@ const options = {
 module.exports = options;
 ```
 
-You can set whether or not to process comments about a table.
-Let us assume the following table.
+
+## Details
+
+There are two main sections within the `options.comments` node, `table` and `column`. The structure of these sections is identical:
+
+### active
+
+(boolean : false) When true, SQL comments from this section will be rendered as TypeScript comments.
+
+### format
+
+This is a template with defined replacement strings. The template will be rendered for every comment (table or column depending on section).
+
+- !name - This literal text will be replaced with the table name or column name.
+- !text - This literal text will be replaced with the SQL comment.
+
+Default table format/template : `// [table:!name] : !text`  
+Default column format/template : `// !name : !text`
+
+## Examples
+
+### Using defaults
+
+Note the COMMENT annotations in this "todo" table:
 
 ```sql
 CREATE TABLE todo (
-  id INT PRIMARY KEY AUTO_INCREMENT comment 'It will always be unique.',
+  id INT PRIMARY KEY AUTO_INCREMENT COMMENT 'It will always be unique.',
   task VARCHAR(255) NOT NULL,
   description TEXT,
   due_date DATE,
@@ -39,10 +57,7 @@ CREATE TABLE todo (
 ) COMMENT='Tables to manage tasks';
 ```
 
-- active - Sets whether comments are processed or not; if true, comments are processed.
-- format - Sets the format of the comment.
-
-When active is true, the following comments are output.
+When configured to save the comments using the default format text, the replacement strings are substituted and the result is saved in the TypeScript as inline comments:
 
 ```ts
 // [table:todo_list] : Tables to manage tasks
@@ -58,24 +73,16 @@ export const todoListSchema = z.object({
 export type TodoList = z.infer<typeof todoListSchema>;
 ```
 
-### format
+### Custom format
 
-- !name - Alternative characters for table and column names.
-- !text - Alternate text for comments.
-
-The default format is as follows
-
-- table - `// [table:!name] : !text`
-- column - `// !name : !text`
-
-For example, you want to comment only on columnst and table. Or if you want to comment with `/* */` instead of `//`, set as follows.
+Assume, you want to comment only on columns using`/* */` instead of `//`.
 
 ```js
 const options = {
   comments: {
     table: {
-      active: true,
-      format: "/* !text */",
+      active: false,
+      format: "not used",
     },
     column: {
       active: true,
@@ -86,10 +93,9 @@ const options = {
 module.exports = options;
 ```
 
-With the above settings, the following output is obtained.
+Result:
 
 ```ts
-/* Tables to manage tasks */
 export const todoListSchema = z.object({
   /* It will always be unique. */
   id: z.number(),
@@ -100,3 +106,28 @@ export const todoListSchema = z.object({
   updated_at: z.date().nullish(),
 });
 ```
+
+## Notes
+
+There are two kinds of SQL comments - metadata for the database, and information for people reading the query.
+
+Metadata is specified like this:
+
+```sql
+`startdate` date DEFAULT NULL COMMENT 'Starting Date',
+```
+
+These are comments for people:
+
+```sql
+/* End Dates are special
+ * See docs for details
+ */
+`enddate` date DEFAULT NULL, -- Ending Date
+```
+
+The comment for the starting date is saved in the information_schema database. This is the comment imported into code by mysql-to-zod.
+
+The comment for the ending date is not saved anywhere in the database because it is an annotation, a decoration for a person reading the query, not metadata.
+
+To incorporate annotation comments into TypeScript code with mysql-to-zod, it may be necessary to convert comments from the annotation format to the metadata format, and then re-execute the queries in a safe environment. Most of this can be done by code or editor. Once the metadata is in the database it can be retrieved by this utility.
