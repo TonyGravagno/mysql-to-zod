@@ -15,7 +15,6 @@
     "debugBuild": "esbuild ./src/main.ts --bundle --sourcemap --platform=node --outfile=./dist/main.js --external:prettier",
     "test": "vitest",
     "type": "tsc --noEmit",
-    "lint": "pnpm biome check --apply ./src",
     "fmt": "pnpm biome format --write ./src",
     "check": "pnpm biome check --write ./src",
     "pub": "zx ./build.mjs && zx ./addShebang.mjs && npm publish",
