@@ -3,10 +3,10 @@ import { type AST, type Create, Parser } from "node-sql-parser";
 import { objectToCamel } from "ts-case-convert";
 import type { SchemaInformation } from "../../../features/sync/types/syncType";
 import type { MysqlToZodOption } from "../../../options/options";
+import { writeLocalFile } from "../../outputToFile/outputToFile";
 import { type SchemaResult, columnsSchema } from "../types/buildSchemaTextType";
 import { getTableComment } from "./buildSchemaTextUtil";
 import { createSchema } from "./createSchema";
-import { writeLocalFile } from "../../outputToFile/outputToFile";
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const convertToColumn = (ast: any) => {
@@ -49,7 +49,7 @@ export const createSchemaFile = async (
 
 	if (options?.output?.saveAst) {
 		const astJson = JSON.stringify(ast, null, 2);
-		writeLocalFile(options?.output,`${tableName}_ast.json`,astJson)
+		writeLocalFile(options?.output, `${tableName}_ast.json`, astJson);
 	}
 
 	const columns = columnsSchema.array().parse(
