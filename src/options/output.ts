@@ -6,6 +6,7 @@ export const outputSchema = z.object({
 	globalSchemaFileName: z.string().optional().default("globalSchema.ts"),
 	sqlFileName: z.string().optional().default("tables.sql"),
 	saveSql: z.boolean().default(false),
+	saveAst: z.boolean().default(false),
 });
 
 export type OptionOutput = z.infer<typeof outputSchema>;
