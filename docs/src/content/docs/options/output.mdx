@@ -1,6 +1,6 @@
 ---
 title: "Output"
-author: "araera111"
+author: "tonygravagno"
 ---
 
 ```js
@@ -9,9 +9,9 @@ const options = {
     outDir: "./mysqlToZod",
     fileName: "schema.ts",
     sqlFileName: "tablename",
-		globalSchemaFileName: "globals.ts",
-		saveSql: true,
-		saveAst: false,
+    globalSchemaFileName: "globals.ts",
+    saveSql: true,
+    saveAst: false,
   },
 };
 module.exports = options;
@@ -58,7 +58,7 @@ Details for each `options.output` parameter follow. Descriptions are prefaced wi
 - Mysql-to-Zod can save all schema details for every table in the (fileName) .ts file. But common details will be replicated there many times for individual tables and across the entire set of tables processed. A global schema file can be created to store common features. When this is done, the primary schema file is modified for each field to refer to global schema definitions, rather than including all details in each field.
 - As with saveSql and sqlFileName, when the option is set to save a global file, this is the filename to save.
 - The directive to save a global schema file is in [options.schema.inline](/options/schema#inline) - set to true to save.
-- *Note : This functionality is actively being developed to reduce redundancy, make effective use of Zod features, and improve developer options to abstract common functionality out of entity/class/table details. Questions and suggestions are always welcome.*
+- _Note : This functionality is actively being developed to reduce redundancy, make effective use of Zod features, and improve developer options to abstract common functionality out of entity/class/table details. Questions and suggestions are always welcome._
 
 ### saveAst
 
