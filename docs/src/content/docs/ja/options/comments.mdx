@@ -3,11 +3,7 @@ title: "Comments"
 author: "araera111"
 ---
 
-## コメント設定
-
-## 設定項目
-
-commentsの設定項目は、以下のようなオブジェクトを取ります。
+mysql-to-zodは、DBMSから生成されたスキーマファイルにコメントを保存することができます。コメントには、テーブルコメントとカラムコメントの2種類があります。設定ファイルの`options.comments`セクションで、どのコメントを保存するかを定義します。
 
 ```js
 const options = {
@@ -25,29 +21,47 @@ const options = {
 module.exports = options;
 ```
 
-テーブルについてのコメントを処理するかどうかを設定します。
-下記のようなテーブルを想定してみます。
+## 詳細
+
+`options.comments`ノード内には、`table`と`column`の2つのメインセクションがあります。これらのセクションの構造は同じです。
+
+### active
+
+(boolean : false) trueの場合、このセクションのSQLコメントはTypeScriptコメントとして出力されます。
+
+### format
+
+これは定義された置換文字列を持つテンプレートです。テンプレートは、コメントごとに（テーブルまたはカラムに応じて）適用されます。
+
+- !name - テーブル名またはカラム名で置換されます。
+- !text - SQLコメントで置換されます。
+
+デフォルトのテーブルフォーマット/テンプレート : `// [table:!name] : !text`
+デフォルトのカラムフォーマット/テンプレート : `// !name : !text`
+
+## 例
+
+### デフォルトを使用する
+
+この"todo"テーブルのCOMMENTアノテーションに注目してください。
 
 ```sql
 CREATE TABLE todo (
-  id INT PRIMARY KEY AUTO_INCREMENT comment '必ず一意になります',
+  id INT PRIMARY KEY AUTO_INCREMENT COMMENT 'It will always be unique.',
   task VARCHAR(255) NOT NULL,
   description TEXT,
   due_date DATE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) COMMENT='タスクの一覧を管理するテーブル';
+) COMMENT='Tables to manage tasks';
 ```
 
-- active - コメントを処理するかどうかを設定します。trueの場合、コメントを処理します。
-- format - コメントのフォーマットを設定します。
-
-activeがtrueのときは、下記のようなコメントが出力されます。
+デフォルトのフォーマットを使用してコメントを保存するように設定されている場合、置換文字列が置き換えられ、結果はインラインコメントとして保存されます。
 
 ```ts
-// [table:todo_list] : タスクの一覧を管理するテーブル
+// [table:todo_list] : Tables to manage tasks
 export const todoListSchema = z.object({
-  // id : 必ず一意になります
+  // id : It will always be unique.
   id: z.number(),
   task: z.string(),
   description: z.string().nullish(),
@@ -58,25 +72,16 @@ export const todoListSchema = z.object({
 export type TodoList = z.infer<typeof todoListSchema>;
 ```
 
-### format
+### カスタムフォーマット
 
-- !name - テーブル名、カラム名の代替文字です。
-- !text - コメントのテキストの代替文字です。
-
-デフォルトのformatは下記の通りです。
-
-- table - `// [table:!name] : !text`
-- column - `// !name : !text`
-
-たとえばcolumnstとtableでコメントだけしたい。あるいは`//`ではなく`/* */`でコメントしたい場合は、下記のように設定します。
+カラムにのみ`/* */`を使用してコメントを付けたい場合を想定してください。
 
 ```js
-/** @type {import("./src/options/options").MysqlToZodOption} */
 const options = {
   comments: {
     table: {
-      active: true,
-      format: "/* !text */",
+      active: false,
+      format: "not used",
     },
     column: {
       active: true,
@@ -84,15 +89,15 @@ const options = {
     },
   },
 };
+
 module.exports = options;
 ```
 
-以上の設定で、下記のような出力が得られます。
+結果:
 
 ```ts
-/* タスクの一覧を管理するテーブル */
 export const todoListSchema = z.object({
-  /* 必ず一意になります */
+  /* It will always be unique. */
   id: z.number(),
   task: z.string(),
   description: z.string().nullish(),
@@ -101,3 +106,28 @@ export const todoListSchema = z.object({
   updated_at: z.date().nullish(),
 });
 ```
+
+## 注意事項
+
+SQLコメントには二種類あります。データベースのメタデータ用と、クエリを読む人向けの情報です。
+
+メタデータは次のように指定されます。
+
+```sql
+`startdate` date DEFAULT NULL COMMENT 'Starting Date',
+```
+
+以下はユーザー向けのコメントです。
+
+```sql
+/* 終了日は特別です
+ * 詳細はドキュメントを参照してください
+ */
+`enddate` date DEFAULT NULL, -- 終了日
+```
+
+開始日に関するコメントは`information_schema`データベースに保存されます。これが`mysql-to-zod`によってコードにインポートされるコメントです。
+
+終了日に関するコメントはデータベースには保存されません。これはメタデータではなく、クエリを読む人への装飾（注釈）です。
+
+この注釈形式のコメントを`mysql-to-zod`でTypeScriptコードに組み込むためには、注釈コメントをメタデータ形式に変換し、安全な環境で再実行する必要があるかもしれません。これのほとんどはコードやエディタで実行できます。一度メタデータがデータベースに保存されると、このユーティリティで取得可能です。

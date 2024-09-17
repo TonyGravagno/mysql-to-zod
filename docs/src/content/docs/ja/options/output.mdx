@@ -1,30 +1,71 @@
 ---
 title: "Output"
-author: "araera111"
+author: "tonygravagno"
+translator: "araera111"
 ---
-
-## 出力設定
-
-## 設定項目
-
-outputの設定項目は下記2つです。
-
-- outDir : 出力先ディレクトリを設定できます。
-- fileName : 出力ファイル名を設定できます。
-
-## 設定ファイル
 
 ```js
 const options = {
   output: {
     outDir: "./mysqlToZod",
     fileName: "schema.ts",
+    sqlFileName: "tablename",
+    globalSchemaFileName: "globals.ts",
+    saveSql: true,
+    saveAst: false,
   },
 };
 module.exports = options;
 ```
 
-設定が存在しない場合は、デフォルトの設定が適用されます。
+`options.output`パラメータの詳細は以下の通りです。説明の先頭には、フィールドの型とデフォルトの値が書かれています。
 
-- outDir `./mysqlToZod`
-- fileName: `schema.ts`
+## 詳細
+
+### outDir
+
+(string : `.` ) mysql-to-zodから生成されたすべてのファイルが書き込まれる出力ディレクトリ。
+
+- このフォルダは、mysql-to-zodが実行される現在の作業ディレクトリからの相対パスです。
+- フォルダ名は"./"または"../"で始まる相対パスである必要があります。絶対パスは使用しないでください。
+- Windowsを含むすべてのオペレーティングシステムでスラッシュでの区切りを使用します。
+- 設定ファイルが`-f`オプションで指定された場合でも、出力先はコマンドを実行したフォルダを基準とします。設定ファイルのフォルダではありません。この方法により、同じ設定ファイルを複数のプロジェクトで使用し、常に現在のプロジェクトのファイルを現在のプロジェクトフォルダから書き込むことができます。
+- 例: "./schemaForThisProject", "../../projects/allSchemaFolder"
+
+### fileName
+
+(string : `schema.ts`) すべてのスキーマが書き込まれる単一の.tsファイルのファイル名。
+
+- たとえば、「allSchema.ts」と指定した場合、すべてのテーブルの型定義がこのファイルに書き込まれます。
+
+### saveSql
+
+(boolean : false) すべてのテーブルのSQL、`CREATE TABLE`文を保存するかどうかを指定します。
+
+- この機能はSQLの情報取得を目的としています。このオプションを使用すると、処理されるRDBMSテーブルを理解し、結果として生成されるZodスキーマと比較することができます。たとえば、SQLが列を「int」として示している場合、スキーマが`z.number`である理由がわかります。
+- 列が期待される Zod 構文に処理されていない場合、このドキュメントの詳細とオプションを確認しGitHubの[Discussions](https://github.com/araera111/mysql-to-zod/discussions)や、[Discord](https://github.com/araera111/mysql-to-zod/wiki/Discord)、または[Issue](https://github.com/araera111/mysql-to-zod/issues)でお問い合わせください。
+
+### sqlFileName
+
+(string : `tablename`) saveSql=trueの場合、書き込まれるSQLファイルの名前。
+
+- fileNameと同様に、"allTables.sql"のような名前を使用すると、すべてのテーブルのSQLがこの1つのファイルに保存されます。
+- このフィールドが"tablename"（デフォルト値）の場合、テーブルごとにテーブル名と.sql拡張子を使用して1つのファイルが生成されます。例: "person.sql"、"company.sql"（この動的ファイル名オプションは.tsファイルに追加されるかもしれません）。
+
+### globalSchemaFileName
+
+(string : `globals.ts`) globalSchema.tsファイルの名前。
+
+- mysql-to-zodはすべてのテーブルのスキーマ詳細を(fileName) .tsファイルに保存できます。ただし、個々のテーブルと処理されるすべてのテーブルに共通の詳細スキーマが多く含まれます。共通のスキーマを保存するためにグローバルスキーマファイルを作成できます。グローバルスキーマに出力すると、各フィールドが個々のテーブルのスキーマ定義を参照するように主要なスキーマファイルが変更され、すべての詳細が各フィールドに含まれるのではなく、共通の詳細が含まれます。
+  （簡単に説明すると、たとえばz.date()ではなく拡張したスキーマを使用したい場合、globalSchema.tsを書き換えることで共通処理とできる）
+- saveSqlとsqlFileNameと同様に、グローバルスキーマファイルを保存するオプションが設定されている場合、そのファイル名で保存します。
+- グローバルスキーマファイルを保存する設定は[options.schema.inline](/options/schema#inline)にあります - 保存するにはtrueに設定します。
+
+### saveAst
+
+(boolean : false) テーブルと列の詳細を保存するかどうかを指定します。
+
+- この機能は、テーブルと列の詳細を保存するためのものです。このオプションを使用すると、Zodスキーマの生成に使用されるASTを確認できます。
+- 生成されたコードがSQLを正確に反映していない場合、原因は予期しないデータ、データの誤った処理、または必要なデータの不足が考えられます。
+- このユーティリティの動作を理解したり変更したりするために、SQL（またはその一部）とASTの両方を持っていると非常に役立ちます。
+- このオプションを使用すると、ASTが保存されるため、ASTを使用してスキーマを生成するための新しいツールを作成することもできます。

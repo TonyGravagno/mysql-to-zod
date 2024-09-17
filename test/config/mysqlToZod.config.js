@@ -3,9 +3,7 @@ const options = {
 	output: {
 		outDir: "./mysqlToZod",
 		fileName: "schema.ts",
-		globalSchemaFileName: "globalSchema.ts",
-		sqlFileName: "tables.sql",
-		saveSql: true,
+		globalSchemaFileName: "globalSchemaaa.ts",
 	},
 	comments: {
 		table: {
@@ -37,7 +35,7 @@ const options = {
 		},
 	},
 	separate: {
-		isSeparate: true,
+		isSeparate: false,
 		insertPrefix: "insert",
 		insertSuffix: "",
 	},

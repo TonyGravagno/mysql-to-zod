@@ -26,5 +26,5 @@
     "types": ["vitest/globals"]
   },
   "include": ["./src", "mysqlToZod.config.js"],
-  "exclude": ["node_modules", "dist", "mysqlToZod"]
+  "exclude": ["node_modules", "dist", "mysqlToZod", "files"]
 }

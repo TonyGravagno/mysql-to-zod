@@ -14,6 +14,7 @@ export const columnsSchema = z.object({
 	nullable: z.boolean(),
 	comment: z.string().optional(),
 	autoIncrement: z.boolean().optional().default(false),
+	length: z.number().optional(),
 });
 
 export type Column = z.infer<typeof columnsSchema>;

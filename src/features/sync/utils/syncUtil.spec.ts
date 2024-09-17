@@ -30,7 +30,7 @@ describe("mergeSchemaTextWithOldInformation 完成したschemaTextと以前のsc
 			"export const aaaSchema = z.object({ DB_ID: z.number() });";
 
 		const result = `export const aaaSchema = z.object({
-  DB_ID: z.number().optional(),
+	DB_ID: z.number().optional(),
 });`;
 		const ex = await mergeSchemaTextWithOldInformation({
 			schemaInformation,
@@ -55,11 +55,11 @@ describe("getSchemaInformation", () => {
 	});
 	it("case2", () => {
 		const text = `export const configCancelSchema = z.object({
-  DB_ID: z.number(),
-  GROUP_ID: z.number(),
-  sort_key: z.number(),
-  disp_cancel: z.number(),
-  cancel_text: z.string(),
+	DB_ID: z.number(),
+	GROUP_ID: z.number(),
+	sort_key: z.number(),
+	disp_cancel: z.number(),
+	cancel_text: z.string(),
 });`;
 		const result: SchemaInformation[] = [
 			{
@@ -93,13 +93,13 @@ describe("formatByPrettier", () => {
 		const str =
 			"export const myTodoListSchema = z.object({  id: z.number(),  status: z.string(),  task: z.string(),  description: z.string().nullish(),  due_date: z.date().nullish(),  created_at: z.date().nullish(),  updated_at: z.date().nullish(),});";
 		const result = `export const myTodoListSchema = z.object({
-  id: z.number(),
-  status: z.string(),
-  task: z.string(),
-  description: z.string().nullish(),
-  due_date: z.date().nullish(),
-  created_at: z.date().nullish(),
-  updated_at: z.date().nullish(),
+	id: z.number(),
+	status: z.string(),
+	task: z.string(),
+	description: z.string().nullish(),
+	due_date: z.date().nullish(),
+	created_at: z.date().nullish(),
+	updated_at: z.date().nullish(),
 });
 `;
 		expect(await formatByPrettier(str)).toBe(result);

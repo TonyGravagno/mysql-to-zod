@@ -8,6 +8,9 @@ describe("configLoad", () => {
 				output: {
 					outDir: "./mysqlToZod",
 					fileName: "schema.ts",
+					globalSchemaFileName: "globalSchema.ts",
+					saveSql: true,
+					sqlFileName: "tables.sql",
 				},
 				comments: {
 					table: {
@@ -32,7 +35,7 @@ describe("configLoad", () => {
 					suffix: "Schema",
 					replacements: [],
 					nullType: "nullish",
-					inline: true,
+					inline: false,
 					zod: {
 						implementation: [],
 						references: [],
