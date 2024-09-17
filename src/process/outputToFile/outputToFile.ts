@@ -1,4 +1,4 @@
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { G } from "@mobily/ts-belt";
 import { mkdirpSync, readFileSync, writeFileSync } from "fs-extra";
 import { P, match } from "ts-pattern";
@@ -20,6 +20,22 @@ export type SqlOutputParams = {
 	output?: OptionOutput;
 };
 
+export const getOutputDir = (output: OptionOutput | undefined | string) => {
+	if (typeof output === "string" && output !== "") return resolve(output);
+	if (typeof output === "string" && output === "")
+		return resolve(outputDefaults.outDir);
+
+	if (
+		G.isNullable(output) ||
+		G.isNullable(output.outDir) ||
+		output.outDir === ""
+	)
+		return resolve(outputDefaults.outDir);
+
+	// to absolute path
+	return resolve(output.outDir);
+};
+
 /**
  * General purpose output: Creates a folder if not exists, writes content to a file, and logs the result.
  * @param {string} outputTo - Directory to save the file or config data that has that detail.
@@ -28,20 +44,15 @@ export type SqlOutputParams = {
  * @param {string} fileType - Type of the file being written (for logging purposes).
  */
 export const writeLocalFile = (
-	outputTo: string | OptionOutput | undefined,
+	outputTo: OptionOutput | undefined | string,
 	fileName: string,
 	content: string,
 	formatType?: SupportedFormatters,
 ) => {
-	const outDir =
-		typeof outputTo === "string" && outputTo.length > 0
-			? outputTo
-			: (typeof outputTo === "object" && outputTo?.outDir) ||
-				outputDefaults.outDir;
-
+	const outDir = getOutputDir(outputTo);
 	mkdirpSync(outDir);
-	const savePath = join(process.cwd(), outDir, fileName);
-	writeFileSync(savePath, content);
+	const savePath = join(outDir, fileName);
+	writeFileSync(savePath, content, "utf-8");
 
 	const fileType = match(formatType)
 		.with("babel-ts", () => "TS code file")
@@ -75,8 +86,8 @@ export const writeFormattedFile = async (
 		output?.sqlFileName !== "tablename"
 	) {
 		// append, don't replace
-		const outDir = output?.outDir || outputDefaults.outDir;
-		const savePath = join(process.cwd(), outDir, fileName);
+		const outDir = getOutputDir(output);
+		const savePath = join(outDir, fileName);
 		try {
 			const existing = readFileSync(savePath, "utf-8");
 			formatted = `${existing}\n${formatted}`;

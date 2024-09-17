@@ -25,11 +25,13 @@ Details for each `options.output` parameter follow. Descriptions are prefaced wi
 
 (string : `.` ) The output directory where all files generated from this utility are written.
 
-- This folder is relative to the current working directory where the mysql-to-zod utility is executed.
-- At this time the folder name must be relative, with a leading "./" or "../". Do not use an absolute path here.
+- This folder can be specified as either a **relative** or **absolute** path.
 - Forward slashes are used in all operating systems.
-- Even when the configuration file is specified at the command-line with the -f option, the output directory is relative to the command-line folder (cwd/pwd), not relative to the config folder. This allows the same configuration file to be used with multiple projects, always writing current project files, starting in the current project folder.
-- Examples: "./schemaForThisProject" and "../../projects/allSchemaFolder"
+- When a relative path is used, it is relative to the current working directory (cwd/pwd) where the `mysql-to-zod` utility is executed.
+- Even when the configuration file is specified at the command-line with the `-f` option, the output directory is relative to the command-line folder (cwd/pwd), not relative to the config folder. This allows the same configuration file to be used with multiple projects, always writing current project files, starting in the current project folder.
+- Examples:
+  - Relative paths: `"./schemaForThisProject"`, `"../../projects/allSchemaFolder"`
+  - Absolute paths: `"/usr/local/project/schema"`, `"C:/Users/project/schema"`
 
 ### fileName
 
