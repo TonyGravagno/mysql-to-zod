@@ -21,15 +21,16 @@ export type SqlOutputParams = {
 };
 
 export const getOutputDir = (output: OptionOutput | undefined | string) => {
-	if (typeof output === "string" && output !== "") return output;
-	if (typeof output === "string" && output === "") return outputDefaults.outDir;
+	if (typeof output === "string" && output !== "") return resolve(output);
+	if (typeof output === "string" && output === "")
+		return resolve(outputDefaults.outDir);
 
 	if (
 		G.isNullable(output) ||
 		G.isNullable(output.outDir) ||
 		output.outDir === ""
 	)
-		return outputDefaults.outDir;
+		return resolve(outputDefaults.outDir);
 
 	// to absolute path
 	return resolve(output.outDir);
