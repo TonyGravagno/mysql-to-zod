@@ -1,11 +1,8 @@
 /** @type {import("./src/options/options").MysqlToZodOption} */
 const options = {
 	output: {
-		outDir: "./mysqlToZod",
+		outDir: "/tmp/mysqlToZod",
 		fileName: "schema.ts",
-		globalSchemaFileName: "globalSchema.ts",
-		sqlFileName: "tables.sql",
-		saveSql: true,
 	},
 	comments: {
 		table: {
@@ -30,7 +27,7 @@ const options = {
 		suffix: "Schema",
 		replacements: [],
 		nullType: "nullish",
-		inline: false,
+		inline: true,
 		zod: {
 			implementation: [],
 			references: [],

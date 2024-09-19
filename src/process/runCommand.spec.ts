@@ -45,12 +45,12 @@ describe("runCommand", async () => {
 		const result = `import { z } from "zod";
 import { globalSchema } from "./globalSchema";
 export const todoSchema = z.object({
-  id: z.number(),
-  title: z.string(),
-  description: z.string().nullable(),
-  is_completed: z.number().nullable(),
-  created_at: z.date().nullable(),
-  updated_at: z.date().nullable(),
+	id: z.number(),
+	title: z.string(),
+	description: z.string().nullable(),
+	is_completed: z.number().nullable(),
+	created_at: z.date().nullable(),
+	updated_at: z.date().nullable(),
 });
 export type Todo = z.infer<typeof todoSchema>;
 `;
@@ -98,12 +98,12 @@ export type Todo = z.infer<typeof todoSchema>;
 		const result = `import { z } from "zod";
 import { globalSchema } from "./globalSchema";
 export const postsSchema = z.object({
-  id: z.number(),
-  title: z.string(),
-  content: z.string(),
-  author_id: z.number(),
-  created_at: z.date().nullable(),
-  updated_at: z.date().nullable(),
+	id: z.number(),
+	title: z.string(),
+	content: z.string(),
+	author_id: z.number(),
+	created_at: z.date().nullable(),
+	updated_at: z.date().nullable(),
 });
 export type Posts = z.infer<typeof postsSchema>;
 `;
