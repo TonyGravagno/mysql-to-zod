@@ -6,7 +6,8 @@
       "request": "launch",
       "name": "ts-debug",
       "program": "${workspaceFolder}/src/main.ts",
-      "preLaunchTask": "prebuild",
+      "args": ["-f","../local/configs/tg1.config.cjs"],
+      //"preLaunchTask": "prebuild",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }
   ]
